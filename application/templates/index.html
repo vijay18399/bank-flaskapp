@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h1>Welcome to Universal Bank.</h1>
+
+            {% if session['user_id'] %}
+            <table class="w3-table w3-blue">
+                <tr>
+                  <th>Action</th>
+                  <th>link</th>
+                </tr>
+                <tr>
+                  <td>Add Customer </td>
+                  <td><a href="/create_customer">link</a></td>
+            
+                </tr>
+                <tr>
+                    <td>Add Account </td>
+                    <td><a href="/create_account">link</a></td>
+              
+                  </tr>
+                  <tr>
+                    <td>customers </td>
+                    <td><a href="/customers">link</a></td>
+              
+                  </tr>
+                  <tr>
+                    <td>Accounts </td>
+                    <td><a href="/accounts">link</a></td>
+              
+                  </tr>
+                  <tr>
+                    <td>Trasactions </td>
+                    <td><a href="/tnxs">link</a></td>
+              
+                  </tr>
+             
+              </table>
+            {% else %}
+                <p> <a href="{{url_for('login') }}">Login</a></p>
+            {% endif %}
+
+            
+
+        </div>
+    </div>
+{% endblock %}

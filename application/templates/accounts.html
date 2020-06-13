@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+    
+{% block content %}
+<h1>Accounts</h1>
+
+<!--  Display the Term and Year here --->
+
+{% if term  %}
+<div>
+
+
+
+        {% for data in accounts %}
+        <div>
+            <h3 scope='row'>ws_cust_id : {{ data["ws_cust_id"] }}</h3>
+            <h3>ws_acct_id : {{ data["ws_acct_id"] }}</h3>
+            <h3>ws_acct_type : {{ data["ws_acct_type"] }}</h3>
+            <h3>ws_acct_balance : {{ data["ws_acct_balance"] }}</h3>
+            <h3>ws_acct_crdate : {{ data["ws_acct_crdate"] }}</h3>
+            <h3>ws_acct_lasttrdate : {{ data["ws_acct_lasttrdate"] }}</h3>
+            <h3>ws_acct_duration : {{ data["ws_acct_duration"] }}</h3>
+            <h3>  <a href="/delete_account/{{data['ws_acct_id']}}">Delete </a></h3>
+            <h3> <a href="/deposit/{{data['ws_acct_id']}}">withdraw </a></h3>
+            <h3> <a href="/withdraw/{{data['ws_acct_id']}}">deposit </a></h3>
+            
+        </div>
+        {% endfor %}
+   
+</div>
+{% else %}
+
+<div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">ws_cust_id</th>
+            <th scope="col">ws_acct_id</th>
+            <th scope="col">ws_acct_type</th>
+            <th scope="col">ws_acct_balance</th>
+            <th scope="col">ws_acct_crdate</th>
+            <th scope="col">ws_acct_lasttrdate</th>
+            <th scope="col">ws_acct_duration</th>
+            <th scope="col">view</th>
+            <th scope="col">withdraw</th>
+            <th scope="col">deposit</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <!-- Construct the rest of courses here -->
+        {% for data in accounts %}
+        <tr>
+            <td scope='row'>{{ data["ws_cust_id"] }}</td>
+            <td>{{ data["ws_acct_id"] }}</td>
+            <td>{{ data["ws_acct_type"] }}</td>
+            <td>{{ data["ws_acct_balance"] }}</td>
+            <td>{{ data["ws_acct_crdate"] }}</td>
+            <td>{{ data["ws_acct_lasttrdate"] }}</td>
+            <td>{{ data["ws_acct_duration"] }}</td>
+            <td> <a href="/accounts/{{data['ws_acct_id']}}">view </a></td>
+            <td> <a href="/deposit/{{data['ws_acct_id']}}">withdraw </a></td>
+            <td> <a href="/withdraw/{{data['ws_acct_id']}}">deposit </a></td>
+        </tr>
+        {% endfor %}
+        
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

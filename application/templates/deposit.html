@@ -1,0 +1,23 @@
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{category}}">
+                <p>{{ message }}</p>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+Transfer Money
+<form action="" method="POST">
+    <label> Customer ID</label>{{ account.ws_cust_id }}
+    <label> Account ID</label> {{ account.ws_acct_id }}
+
+    <label> Account Type</label> {{ account.ws_acct_type  }}
+
+    <label> Balance</label> {{ account.ws_acct_balance }}
+    <label> Deposit ammount</label> <input max="{{ account.ws_acct_balance }}" type="text" name="amount" >
+    <input  type="text" value="{{ account.ws_acct_id }}" name="ws_acct_id" >
+    <input  type="text" value="{{ account.ws_acct_balance }}" name="ws_acct_balance" >
+    <input type="submit">
+</form>

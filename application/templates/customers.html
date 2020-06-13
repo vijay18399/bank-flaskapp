@@ -1,0 +1,68 @@
+    {% extends "layout.html" %}
+    
+    {% block content %}
+    <h1>Customers</h1>
+
+    <!--  Display the Term and Year here --->
+
+    {% if term  %}
+    <div>
+
+
+            <!-- Construct the rest of courses here -->
+            {% for data in customers %}
+            <div>
+                <h3 scope='row'>ws_ssn : {{ data["ws_ssn"] }}</h3>
+                <h3>ws_cust_id : {{ data["ws_cust_id"] }}</h3>
+                <h3>ws_name : {{ data["ws_name"] }}</h3>
+                <h3>ws_adrs : {{ data["ws_adrs"] }}</h3>
+                <h3>ws_age : {{ data["ws_age"] }}</h3>
+                <h3>update link : <a href="/update_customer/{{data['ws_cust_id']}}">update </a></h3>
+                <h3>Delete link  <a href="/delete_customer/{{data['ws_cust_id']}}">Delete </a></h3>
+            </div>
+            {% endfor %}
+       
+    </div>
+    {% else %}
+ 
+    <div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">ws_ssn</th>
+                <th scope="col">ws_cust_id</th>
+                <th scope="col">ws_name</th>
+                <th scope="col">ws_adrs</th>
+                <th scope="col">ws_age</th>
+                <th scope="col">ws_status</th>
+                <th scope="col">ws_message</th>
+                <th scope="col">ws_cust_crdate</th>
+                <th scope="col">view</th>
+                <th scope="col">update</th>
+                <th scope="col">delete</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <!-- Construct the rest of courses here -->
+            {% for data in customers %}
+            <tr>
+                <td scope='row'>{{ data["ws_ssn"] }}</td>
+                <td>{{ data["ws_cust_id"] }}</td>
+                <td>{{ data["ws_name"] }}</td>
+                <td>{{ data["ws_adrs"] }}</td>
+                <td>{{ data["ws_age"] }}</td>
+                <td>{{ data["ws_status"] }}</td>
+                <td>{{ data["ws_message"] }}</td>
+                <td>{{ data["ws_cust_update"] }}</td>
+                <td> <a href="/customers/{{data['ws_cust_id']}}">view </a></td>
+                <td>  <a href="/update_customer/{{data['ws_cust_id']}}">Update </a></td>
+                <td>  <a href="/delete_customer/{{data['ws_cust_id']}}">Delete </a></td>
+            </tr>
+            {% endfor %}
+            
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+{% endblock %}

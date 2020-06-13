@@ -1,0 +1,45 @@
+
+    {% extends "layout.html" %}
+   
+    {% block content %}
+    
+    <div class="container">
+         <form  action="/create_customer" method="post" >
+        <fieldset class="form-group">
+            <legend>{{title}}</legend>     
+            {{ form.hidden_tag() }}       
+                <p> {{ form.ws_ssn.label }}</br>
+                    {{ form.ws_ssn }}
+                    {% for error in form.ws_ssn.errors %}
+                     <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+              
+                <p> {{ form.ws_name.label }}</br>
+                    {{ form.ws_name }}
+                    {% for error in form.ws_name.errors %}
+                     <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+                <p> {{ form.ws_adrs.label }}</br>
+                    {{ form.ws_adrs }}
+                    {% for error in form.ws_adrs.errors %}
+                     <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>  <p> {{ form.ws_age.label }}</br>
+                    {{ form.ws_age }}
+                    {% for error in form.ws_age.errors %}
+                     <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+           
+            
+               
+                <p> 
+                    {{ form.submit() }}
+                </p>
+            
+        </fieldset>
+        </form>
+    </div>
+    {% endblock %}
