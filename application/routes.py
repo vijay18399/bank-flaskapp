@@ -145,8 +145,8 @@ def withdraw(aid):
             url='/withdraw/'+ws_acct_id
             return redirect(url)
         Account.objects(ws_acct_id=ws_acct_id).update_one(ws_acct_balance=ws_acct_balance)
-        # transactions= Transactions(ws_tnsc_id=get_random_alphaNumeric_string(8),ws_acct_id=ws_acct_id,ws_desc='Withdraw',ws_amt=amount,ws_trxn_date=datetime.now())
-        # transactions.save()
+        transactions= Transactions(ws_tnsc_id=get_random_alphaNumeric_string(8),ws_acct_id=ws_acct_id,ws_desc='Withdraw',ws_amt=amount,ws_trxn_date=datetime.now())
+        transactions.save()
         url='/accounts/'+ws_acct_id
         return redirect(url)
     account = Account.objects(ws_acct_id=aid).first()
@@ -162,8 +162,8 @@ def deposit(aid):
         ws_acct_id = request.form['ws_acct_id']
         ws_acct_balance=int(previous_amount)+int(amount)
         Account.objects(ws_acct_id=ws_acct_id).update_one(ws_acct_balance=ws_acct_balance)
-        # transactions= Transactions(ws_tnsc_id=get_random_alphaNumeric_string(8),ws_acct_id=ws_acct_id,ws_desc='Deposit',ws_amt=amount,ws_trxn_date=datetime.now())
-        # transactions.save()
+        transactions= Transactions(ws_tnsc_id=get_random_alphaNumeric_string(8),ws_acct_id=ws_acct_id,ws_desc='Deposit',ws_amt=amount,ws_trxn_date=datetime.now())
+        transactions.save()
         url='/accounts/'+ws_acct_id
         return redirect(url)
     account = Account.objects(ws_acct_id=aid).first()
@@ -173,7 +173,30 @@ def transfer(cid):
     if not session.get('user_id'):
         return redirect(url_for('login'))
     if request.method == 'POST':
-        pass
+        print(request.form,flush=True)
+        sr_acct_id=request.form['sr_acct_id']
+        tr_acct_id=request.form['tr_acct_id']
+        cid = request.form['cid']
+        if sr_acct_id == tr_acct_id:
+            flash("Source and Target cannot be  same !","success")
+            return redirect('/transfer/'+cid)
+        amount = int(request.form['amount'])
+        account1 = Account.objects(ws_acct_id=sr_acct_id).first()
+        account2 = Account.objects(ws_acct_id=tr_acct_id).first()
+        if account1.ws_acct_balance >= amount:
+            sr_acct_balance = account1.ws_acct_balance - amount
+            tr_acct_balance = account2.ws_acct_balance + amount
+            Account.objects(ws_acct_id=sr_acct_id).update_one(ws_acct_balance=sr_acct_balance)
+            Account.objects(ws_acct_id=tr_acct_id).update_one(ws_acct_balance=tr_acct_balance)
+            transactions1 = Transactions(ws_tnsc_id=get_random_alphaNumeric_string(8),ws_acct_id=sr_acct_id,ws_desc='Transfer from here',ws_amt=amount,ws_trxn_date=datetime.now(),ws_src_typ=account1.ws_acct_type,ws_tgt_typ=account2.ws_acct_type)
+            transactions1.save()
+            transactions2 = Transactions(ws_tnsc_id=get_random_alphaNumeric_string(8),ws_acct_id=tr_acct_id,ws_desc='Transfer to here',ws_amt=amount,ws_trxn_date=datetime.now(),ws_src_typ=account1.ws_acct_type,ws_tgt_typ=account2.ws_acct_type)
+            transactions2.save()
+            flash("Tranfer Successful !","success")
+            return redirect('/transfer/'+cid)
+        else:
+            flash("Tranfer Failur due to insuffiecient funds !","fail")
+            return redirect('/transfer/'+cid)
     account = Account.objects(ws_cust_id=cid)
     count = Account.objects(ws_cust_id=cid).count()
     return render_template("transfer.html",account=account,ws_cust_id=cid,count=count)
