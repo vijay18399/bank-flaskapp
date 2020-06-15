@@ -1,9 +1,9 @@
 from flask import Flask
 from config import Config
 from flask_mongoengine import MongoEngine
-from flask_bootstrap import Bootstrap
+# from flask_bootstrap import Bootstrap
 app = Flask(__name__)
-Bootstrap(app)
+# Bootstrap(app)
 
 app.config.from_object(Config)
 

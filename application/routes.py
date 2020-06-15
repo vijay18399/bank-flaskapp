@@ -3,58 +3,96 @@ from datetime import datetime
 from flask import render_template, request, json, Response, redirect, flash, url_for, session
 from application.models import UserStore, Customer, Account,Transactions
 from application.forms import LoginForm, RegisterForm ,CustomerForm, AccountForm
-courseData = [{"courseID":"1111","title":"PHP 111","description":"Intro to PHP","credits":"3","term":"Fall, Spring"}, {"courseID":"2222","title":"Java 1","description":"Intro to Java Programming","credits":"4","term":"Spring"}, {"courseID":"3333","title":"Adv PHP 201","description":"Advanced PHP Programming","credits":"3","term":"Fall"}, {"courseID":"4444","title":"Angular 1","description":"Intro to Angular","credits":"3","term":"Fall, Spring"}, {"courseID":"5555","title":"Java 2","description":"Advanced Java Programming","credits":"4","term":"Fall"}]
 import random
 import string
 from mongoengine.queryset.visitor import Q
+def get_random_alphaNumeric_string(stringLength=8):
+    lettersAndDigits = string.ascii_letters + string.digits
+    return ''.join((random.choice(lettersAndDigits) for i in range(stringLength)))
 @app.route("/")
 @app.route("/index")
 @app.route("/home")
 def index():
-    return render_template("index.html", index=True )
-
-@app.route("/login", methods=['GET','POST'])
+    return render_template("home.html", index=True )
+@app.route("/login", methods=['POST','GET'])
 def login():
     if session.get('user_id'):
         return redirect(url_for('index'))
-
-    form = LoginForm()
-    if form.validate_on_submit():
-        user_id       = form.user_id.data
-        password    = form.password.data
-
+    if request.method == 'POST':
+        user_id       = request.form['user_id']
+        password    = request.form['password']
         user = UserStore.objects(user_id=user_id).first()
         if user and user.get_password(password):
+            UserStore.objects(user_id=user_id).update_one(timestamp=datetime.now())
             flash(f"{user.user_id}, you are successfully logged in!", "success")
             session['user_id'] = user.user_id
             return redirect("/index")
         else:
             flash("Sorry, something went wrong.","danger")
-    return render_template("login.html", title="Login", form=form, login=True )
+    return render_template("login.html")
 
 @app.route("/logout")
 def logout():
     session['user_id']=False
     session.pop('user_id',None)
     return redirect(url_for('index'))
+@app.route('/create-customer', methods=['POST','GET'])
+def create_customer():
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        ws_ssn       = request.form['ws_ssn']
+        ws_cust_id    =  get_random_alphaNumeric_string(8)
+        ws_name       =  request.form['ws_name'] 
+        ws_adrs       = request.form['ws_adrs'] 
+        ws_age       = request.form['ws_age'] 
+        ws_status = 'ACTIVE'
+        ws_cust_update =   datetime.now()
+        customer = Customer(ws_ssn=ws_ssn,ws_cust_id=ws_cust_id,ws_name=ws_name,ws_adrs=ws_adrs,ws_age=ws_age,ws_status=ws_status,ws_cust_update=ws_cust_update)
+        customer.save()
+        flash("Customer Created successfully !","success")
+        return render_template("customer_management/create_customer.html")
+    return render_template("customer_management/create_customer.html")
+@app.route("/customers/<cid>")
+def customers(cid):
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+    if cid :
+        customers = Customer.objects(ws_cust_id=cid)
+    return render_template("customer_management/customers.html", customers=customers)
+@app.route('/update-customer/<cid>', methods=['POST','GET'])
+def update_customer(cid):
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        ws_name       = request.form['ws_name']
+        ws_adrs       = request.form['ws_adrs']
+        ws_age       = request.form['ws_age']
+        ws_status       = request.form['ws_status']
+        ws_message       = request.form['ws_message']
+        ws_cust_update =   datetime.now()
+        Customer.objects(ws_cust_id=cid).update_one(ws_name=ws_name,ws_adrs=ws_adrs,ws_cust_update=ws_cust_update,ws_age=ws_age,ws_status=ws_status,ws_message=ws_message) 
+        flash("Customer Updated successfully !","success")
+        url = '/customers/'+cid
+        return redirect(url)
+    customer = Customer.objects(ws_cust_id=cid).first()
+    return render_template("customer_management/update_customer.html", customer=customer)
 
+@app.route("/delete_customer/<cid>")
+def delete_customer(cid):
+    print(cid,flush=True)
+    Customer.objects(ws_cust_id=cid).delete()
+    flash("Customer Deleted successfully !","success")
+    return redirect(url_for('customer-status'))
 
-@app.route("/register", methods=['POST','GET'])
-def register():
-    if session.get('user_id'):
-        return redirect(url_for('index'))
-    form = RegisterForm()
-    if form.validate_on_submit():
-        user_id       = form.user_id.data
-        password    = form.password.data
-        user = UserStore(user_id=user_id)
-        user.set_password(password)
-        user.save()
-        flash("You are successfully registered!","success")
-        return redirect(url_for('index'))
-    return render_template("register.html", title="Register", form=form, register=True)
+@app.route('/customer-status')
+def customer_status():
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+    customers = Customer.objects.order_by("-ws_cust_id")
+    return render_template("customer_management/customer_status.html", customers=customers)
 
-@app.route("/create_account", methods=['POST','GET'])
+@app.route('/create-account', methods=['POST','GET'])
 def create_account():
     if not session.get('user_id'):
         return redirect(url_for('login'))
@@ -70,90 +108,80 @@ def create_account():
         account.save()
         flash("Account Created successfully !","success")
         return redirect(url_for('index'))
-    return render_template("account_form.html" )
-def get_random_alphaNumeric_string(stringLength=8):
-    lettersAndDigits = string.ascii_letters + string.digits
-    return ''.join((random.choice(lettersAndDigits) for i in range(stringLength)))
-@app.route("/create_customer", methods=['POST','GET'])
-def create_customer():
+    return render_template("account_management/create_account.html")
+
+@app.route('/delete-account', methods=['POST','GET'])
+def delete_account():
     if not session.get('user_id'):
         return redirect(url_for('login'))
-    form =CustomerForm()
-    if form.validate_on_submit():
-        ws_ssn       = form.ws_ssn.data
-        ws_cust_id       = get_random_alphaNumeric_string(8)
-        ws_name       = form.ws_name.data
-        ws_adrs       = form.ws_adrs.data
-        ws_age       = form.ws_age.data
-        ws_status = 'ACTIVE'
-        ws_cust_update =   datetime.now()
-        customer = Customer(ws_ssn=ws_ssn,ws_cust_id=ws_cust_id,ws_name=ws_name,ws_adrs=ws_adrs,ws_age=ws_age,ws_status=ws_status,ws_cust_update=ws_cust_update)
-        customer.save()
-        flash("Customer Created successfully !","success")
-        return redirect(url_for('index'))
-    return render_template("customer_form.html", form=form)
-@app.route("/customers/")
-@app.route("/customers/<cid>")
-def customers(cid = False):
-    customers = Customer.objects.order_by("-ws_cust_id")
-    if cid :
-        customers = Customer.objects(ws_cust_id=cid)
-    return render_template("customers.html", customers=customers, courses = True, term=cid )
-@app.route("/accounts/")
-@app.route("/accounts/<aid>")
-def accounts(aid = False):
+    if request.method == 'POST':
+        ws_acct_id       = request.form['ws_acct_id']
+        ws_acct_type       = request.form['ws_acct_type']
+        account= Account.objects(ws_acct_id=ws_acct_id,ws_acct_type=ws_acct_type).delete()
+        if account ==0:
+            flash("No Account  Available with Given Information !","danger")
+        else:
+            flash("Account Deleted  successfully !","success")
+        return redirect(url_for('delete_account'))
+    return render_template("account_management/delete_account.html")
+@app.route("/deleteaccount/<aid>")
+def deleteaccount(aid):
+    Account.objects(ws_acct_id=aid).delete()
+    flash("Account Deleted successfully !","success")
+    return redirect(url_for('index'))
+
+@app.route('/account-search', methods=["GET","POST"])
+def account_search():
+    if request.method == 'POST':
+        ws_cust_id=request.form['cid']
+        ws_acct_id=request.form['aid']
+        if ws_acct_id:
+            account = Account.objects(ws_acct_id=ws_acct_id).first()
+            if account:
+                url= 'accounts/'+ws_acct_id
+                return redirect(url)
+            else:
+                flash("No account exists with given Account Id !","danger")
+        else:
+            account = Account.objects(ws_cust_id=ws_cust_id).first()
+            if account:
+                ws_acct_id=account.ws_acct_id
+                url= 'accounts/'+ws_acct_id
+                return redirect(url)
+            else:
+                flash("No account exists with given Account Id !","danger")
+    return render_template("status_detail/account_search.html")
+
+@app.route('/customer-search', methods=["GET","POST"])
+def customer_search():
+    if request.method == 'POST':
+        ws_cust_id=request.form['cid']
+        ws_ssn=request.form['ssn']
+        if ws_cust_id:
+            customer = Customer.objects(ws_cust_id=ws_cust_id).first()
+            if customer:
+                url= 'customers/'+ws_cust_id
+                return redirect(url)
+            else:
+                flash("No Customer exists with given Customer Id !","danger")
+        else:
+            customer = Customer.objects(ws_ssn=ws_ssn).first()
+            if customer:
+                ws_cust_id=customer.ws_cust_id
+                url= 'customers/'+ws_cust_id
+                return redirect(url)
+            else:
+                flash("No Customer exists with given Customer Id !","danger")
+    return render_template("status_detail/customer_search.html")
+
+@app.route('/account-status')
+def account_status():
     accounts = Account.objects.order_by("-ws_acct_id")
-    if aid :
-        accounts = Account.objects(ws_acct_id=aid)
-    return render_template("accounts.html", accounts=accounts, courses = True, term=aid )
-@app.route("/update_customer/<cid>", methods=['POST','GET'])
-def update_customer(cid):
-    if not session.get('user_id'):
-        return redirect(url_for('login'))
-    if request.method == 'POST':
-        ws_name       = request.form['ws_name']
-        ws_adrs       = request.form['ws_adrs']
-        ws_age       = request.form['ws_age']
-        ws_status       = request.form['ws_status']
-        ws_message       = request.form['ws_message']
-        ws_cust_update =   datetime.now()
-        Customer.objects(ws_cust_id=cid).update_one(ws_name=ws_name,ws_adrs=ws_adrs,ws_cust_update=ws_cust_update,ws_age=ws_age,ws_status=ws_status,ws_message=ws_message) 
-        flash("Customer Updated successfully !","success")
-        return redirect(url_for('index'))
-    else:
-        customers = Customer.objects(ws_cust_id=cid)
-        return render_template("customer_update.html", datas=customers)
+    return render_template("status_detail/account_status.html",accounts=accounts)
 
-@app.route("/delete_customer/<cid>")
-def delete_customer(cid):
-    print(cid,flush=True)
-    Customer.objects(ws_cust_id=cid).delete()
-    flash("Customer Deleted successfully !","success")
-    return redirect(url_for('customers'))
-
-@app.route("/withdraw/<aid>", methods=["GET","POST"])
-def withdraw(aid):
-    if not session.get('user_id'):
-        return redirect(url_for('login'))
-    if request.method == 'POST':
-        amount=request.form['amount']
-        previous_amount=request.form['ws_acct_balance']
-        ws_acct_id = request.form['ws_acct_id']
-        ws_acct_balance=int(previous_amount)-int(amount)
-        if ws_acct_balance<=0:
-            flash("With draw  failure insuffiecient funds !","fail")
-            url='/withdraw/'+ws_acct_id
-            return redirect(url)
-        Account.objects(ws_acct_id=ws_acct_id).update_one(ws_acct_balance=ws_acct_balance)
-        transactions= Transactions(ws_tnsc_id=get_random_alphaNumeric_string(8),ws_acct_id=ws_acct_id,ws_desc='Withdraw',ws_amt=amount,ws_trxn_date=datetime.now())
-        transactions.save()
-        url='/accounts/'+ws_acct_id
-        return redirect(url)
-    account = Account.objects(ws_acct_id=aid).first()
-    return render_template("withdraw.html",account=account)
-
-@app.route("/deposit/<aid>", methods=["GET","POST"])
-def deposit(aid):
+@app.route('/deposit', methods=["GET","POST"])
+@app.route('/deposit/<aid>', methods=["GET","POST"])
+def deposit_money(aid=False):
     if not session.get('user_id'):
         return redirect(url_for('login'))
     if request.method == 'POST':
@@ -166,10 +194,14 @@ def deposit(aid):
         transactions.save()
         url='/accounts/'+ws_acct_id
         return redirect(url)
-    account = Account.objects(ws_acct_id=aid).first()
-    return render_template("deposit.html",account=account)
-@app.route("/transfer/<cid>", methods=["GET","POST"])
-def transfer(cid):
+    if aid:
+        account = Account.objects(ws_acct_id=aid).first()
+        return render_template("account_operations/deposit_money.html",account=account,info=True)
+    return render_template("account_operations/deposit_money.html",info=False)
+
+
+@app.route('/transfer/<cid>', methods=["GET","POST"])
+def transfer_money(cid):
     if not session.get('user_id'):
         return redirect(url_for('login'))
     if request.method == 'POST':
@@ -199,51 +231,51 @@ def transfer(cid):
             return redirect('/transfer/'+cid)
     account = Account.objects(ws_cust_id=cid)
     count = Account.objects(ws_cust_id=cid).count()
-    return render_template("transfer.html",account=account,ws_cust_id=cid,count=count)
-@app.route("/delete_account/<aid>")
-def delete_account(aid):
-    print(aid,flush=True)
-    Account.objects(ws_acct_id=aid).delete()
-    flash("Customer Deleted successfully !","success")
-    return redirect(url_for('accounts'))
-@app.route("/search_account", methods=["GET","POST"])
-def search_account():
+    return render_template("account_operations/transfer_money.html",account=account,ws_cust_id=cid,count=count)
+@app.route('/withdraw', methods=["GET","POST"])
+@app.route('/withdraw/<aid>', methods=["GET","POST"])
+def withdraw_money(aid=False):
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
     if request.method == 'POST':
-        ws_cust_id=request.form['cid']
-        ws_acct_id=request.form['aid']
-        if ws_acct_id:
-            url= 'accounts/'+ws_acct_id
+        amount=request.form['amount']
+        previous_amount=request.form['ws_acct_balance']
+        ws_acct_id = request.form['ws_acct_id']
+        ws_acct_balance=int(previous_amount)-int(amount)
+        if ws_acct_balance<=0:
+            flash("With draw  failure insuffiecient funds !","fail")
+            url='/withdraw/'+ws_acct_id
             return redirect(url)
-        else:
-            account = Account.objects(ws_cust_id=ws_cust_id).first()
-            print(account,flush=True)
-            ws_acct_id=account.ws_acct_id
-            url= 'accounts/'+ws_acct_id
-            return redirect(url)
-    return render_template("search_account.html")
-@app.route("/search_customer", methods=["GET","POST"])
-def search_customer():
-    if request.method == 'POST':
-        ws_cust_id=request.form['cid']
-        ws_ssn=request.form['ssn']
-        if ws_cust_id:
-            url= 'customers/'+ws_cust_id
-            return redirect(url)
-        else:
-            customer = Customer.objects(ws_ssn=ws_ssn).first()
-            print(customer,flush=True)
-            ws_cust_id=customer.ws_cust_id
-            url= 'customers/'+ws_cust_id
-            return redirect(url)
-    return render_template("search_customer.html")
-@app.route("/tnxs", methods=["GET","POST"])
-def tnxs():
+        Account.objects(ws_acct_id=ws_acct_id).update_one(ws_acct_balance=ws_acct_balance,ws_acct_lasttrdate=datetime.now())
+        transactions= Transactions(ws_tnsc_id=get_random_alphaNumeric_string(8),ws_acct_id=ws_acct_id,ws_desc='Withdraw',ws_amt=amount,ws_trxn_date=datetime.now())
+        transactions.save()
+        url='/accounts/'+ws_acct_id
+        return redirect(url)
+    if aid:
+        account = Account.objects(ws_acct_id=aid).first()
+        return render_template("account_operations/withdraw_money.html",account=account,info=True)
+    return render_template("account_operations/withdraw_money.html",info=False)
+
+@app.route('/account-statement', methods=["GET","POST"])
+def account_statement():
     if request.method == 'POST':
         ws_acct_id=request.form['ws_acct_id']
         transactions = Transactions.objects(ws_acct_id=ws_acct_id)
         if request.form['from_date'] and request.form['to_date']:
             start = request.form['from_date']
             end=request.form['to_date']
+            limit= request.form['limit']
+            if limit:
+                transactions = Transactions.objects((Q(ws_acct_id=ws_acct_id) & Q(ws_trxn_date__gte=start)) & Q(ws_trxn_date__lte=end)).batch_size(limit)
             transactions = Transactions.objects((Q(ws_acct_id=ws_acct_id) & Q(ws_trxn_date__gte=start)) & Q(ws_trxn_date__lte=end))
-        return render_template("transactions.html", transactions=transactions )
-    return render_template("transactions.html")
+        return render_template("account_operations/account_statement.html", transactions=transactions )
+    return render_template("account_operations/account_statement.html")
+@app.route("/accounts/<aid>")
+def accounts(aid):
+    print(aid,flush=True)
+    if aid :
+        accounts = Account.objects(ws_acct_id=aid)
+    else:
+        return redirect(url_for(index))
+    return render_template("account_operations/accounts.html", accounts=accounts )
+

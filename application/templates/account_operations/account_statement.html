@@ -1,20 +1,15 @@
-{% extends "layout.html" %}
-    
-{% block content %}
-
-
-<form action="" method="POST" >
-<input type="text" name="ws_acct_id" >
-<input type="date" name="from_date" >
-<input type="date" name="to_date" >
-<input type="submit"  >
+{% include "header.html" %}
+<div class="container p-3" align="center">
+<h6>Get Statement</h6>
+<form action="" method="POST">
+<table>
+    <tr><td><h6>Account Id:</h6></td><td><input type="text" name="ws_acct_id" ></td></tr>
+    <tr><td><h6>No of Transactions</h6></td><td><input type="number" name="limit"  ></td></tr>
+    <tr><td><h6>From Date</h6></td><td><input type="date" name="from_date" ></td></tr>
+    <tr><td><h6>To Date</h6></td><td><input type="date" name="to_date" ></td></tr>
+    <tr><td colspan="2" align="center"><input type="submit" value="Get Statement" ></td></tr>
+</table>
 </form>
-
-<h1>transactions</h1>
-
-<!--  Display the Term and Year here --->
-
-
 <div>
     <table   id="example" class="table table-hover">
         <thead>
@@ -73,5 +68,4 @@
   })
   </script>
 
-
-{% endblock %}
+{% include "footer.html" %}

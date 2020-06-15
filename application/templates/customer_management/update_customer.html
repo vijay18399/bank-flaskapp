@@ -1,0 +1,23 @@
+{% include "header.html" %}
+<div class="container" align="center">
+<h6>Update Customer</h6>
+<form action="" method="POST">
+<table>
+    <tr><td><h6>Customer SSIN Id:</h6></td><td><input readonly value="{{ customer['ws_ssn'] }}" type="number" required></td></tr>
+    <tr><td><h6>Customer Id:</h6></td><td><input readonly  value="{{ customer['ws_cust_id'] }}" type="text" required></td></tr>
+    <tr><td><h6>Old Customer Name:</h6></td><td>{{ customer['ws_name']  }}</tr>
+    <tr><td><h6>New Customer Name:</h6></td><td><input name="ws_name" type="text" required></td></tr>
+    <tr><td><h6>Old Address:</h6></td><td>{{ customer['ws_adrs']  }}</td></tr>
+    <tr><td><h6>New Address:</h6></td><td><input type="text"  name="ws_adrs" required></td></tr>
+    <tr><td><h6>Customer Status</h6></td><td><select  name="ws_status">
+        <option    {% if 'ACTIVE' ==  customer["ws_status"] %} selected{% endif %} value="ACTIVE">ACTIVE</option>
+        <option {% if 'IN_ACTIVE' ==  customer["ws_status"] %} selected{% endif %} value="IN_ACTIVE">IN ACTIVE</option>
+      </select></td></tr>
+    <tr><td><h6>Old Age:</h6></td><td>{{ customer['ws_age']  }}</tr>
+    <tr><td><h6>New Age:</h6></td><td><input  name="ws_age" type="number"  required></td></tr>
+    <tr><td><h6>Message</h6></td><td><input  name="ws_message" type="text"  required></td></tr>
+    <tr><td colspan="2" align="center"><input type="submit" value="Update" ></td></tr>
+</table>
+</form>
+
+{% include "footer.html" %}

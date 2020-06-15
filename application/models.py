@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 class UserStore(db.Document):
     user_id     =   db.StringField( unique=True )
     password    =   db.StringField( )
-
+    timestamp    =   db.DateTimeField( )
     def set_password(self, password):
         self.password = generate_password_hash(password)
 

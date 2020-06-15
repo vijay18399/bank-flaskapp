@@ -1,0 +1,31 @@
+{% include "header.html" %}
+<div class="container p-3" align="center">
+<h6>Account Status</h6>
+<table border="2">
+    <tr><th>Customer Id</th>
+        <th>Account Id</th>
+        <th>Account type</th>
+        <th>Account Balance</th>
+        <th>Account Creation Date</th>
+        <th>Last Transaction Date</th>
+        <th colspan="4">Operations</th>
+    </tr>
+    {% for data in accounts %}
+    <tr>
+        <td scope='row'>{{ data["ws_cust_id"] }}</td>
+        <td>{{ data["ws_acct_id"] }}</td>
+        <td> {% if data["ws_acct_type"] ==  "S" %} Savings Account {% else %}  Current account {% endif %}</td>
+        <td>{{ data["ws_acct_balance"] }}</td>
+        <td>{{ data["ws_acct_crdate"].strftime('%Y-%m-%d ') }}</td>
+        <td>{{ data["ws_acct_lasttrdate"].strftime('%Y-%m-%d') }}</td>
+        <td> <a href="/accounts/{{data['ws_acct_id']}}">view </a></td>
+        <td> <a href="/deposit/{{data['ws_acct_id']}}">Deposit </a></td>
+        <td> <a href="/withdraw/{{data['ws_acct_id']}}">Withdraw </a></td>
+        <td> <a href="/transfer/{{data['ws_cust_id']}}">Transfer </a></td>
+    </tr>
+    {% endfor %}
+    
+</table>
+
+
+{% include "footer.html" %}

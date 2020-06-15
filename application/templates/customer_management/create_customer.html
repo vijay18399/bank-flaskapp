@@ -1,0 +1,14 @@
+{% include "header.html" %}
+<div class="container p-3" align="center">
+<h6>Create Customer</h6>
+<form action="" method="POST">
+<table>
+    <tr><td><h6>Customer SSIN Id:</h6></td><td><input name="ws_ssn" type="number"  required></td></tr>
+    <tr><td><h6>Customer Name:</h6></td><td><input type="text" name="ws_name" required></td></tr>
+    <tr><td><h6>Age:</h6></td><td><input type="number" name="ws_age"  required></td></tr>
+    <tr><td><h6>Address:</h6></td><td><input type="text" name="ws_adrs" required></td></tr>
+    <tr><td colspan="2" align="center"><input type="submit" value="submit" ></td></tr>
+</table>
+</form>
+
+{% include "footer.html" %}

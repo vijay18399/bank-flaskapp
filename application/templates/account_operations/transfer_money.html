@@ -1,0 +1,36 @@
+{% include "header.html" %}
+<div class="container p-3" align="center">
+    {% if count == 2  %}
+    <form action="" method="POST">
+        <table>
+       <tr> <td><label> Customer ID</label></td><td> <input value="{{ ws_cust_id }}" type="text" name="cid"></td>
+       </tr> 
+       <tr> <td>
+        <label> Source Account Type</label></td>
+     <td>   <select id="sr_acct_id" name="sr_acct_id">
+            {% for data in account %}
+            <option value="{{data['ws_acct_id']}}">{{data['ws_acct_type']}}</option>
+            {% endfor %}
+        </select>
+    </td></tr>
+    <tr> <td>  <label> Target Account Type</label></td> 
+        <td>
+        <select id="tr_acct_id" name="tr_acct_id">
+            {% for data in account %}
+            <option value="{{data['ws_acct_id']}}">{{data['ws_acct_type']}}</option>
+            {% endfor %}
+        </select>  
+    </td></tr>
+    <tr> <td> 
+        <label> Amount</label> </td><td><input type="number" name="amount"> </td></tr>
+    
+     <tr><td colspan="2"><input type="submit"></td></tr>   
+    </table>
+        {% else %}
+        Current User {{ ws_cust_id }} Donot have both Saving and Current 
+        {% endif %}
+    </form>
+    </div>
+
+
+{% include "footer.html" %}
