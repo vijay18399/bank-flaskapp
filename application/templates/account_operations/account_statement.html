@@ -1,23 +1,28 @@
-{% include "header.html" %}
-<div class="container p-3" align="center">
-<h6>Get Statement</h6>
+
+{% extends "layout.html" %}
+
+{% block content %}
+
+{% if not transactions %}
 <form action="" method="POST">
-<table>
-    <tr><td><h6>Account Id:</h6></td><td><input type="text" name="ws_acct_id" ></td></tr>
-    <tr><td><h6>No of Transactions</h6></td><td><input type="number" name="limit"  ></td></tr>
-    <tr><td><h6>From Date</h6></td><td><input type="date" name="from_date" ></td></tr>
-    <tr><td><h6>To Date</h6></td><td><input type="date" name="to_date" ></td></tr>
-    <tr><td colspan="2" align="center"><input type="submit" value="Get Statement" ></td></tr>
-</table>
+<div class="jumbotron">
+    <tr><label>Account Id:</label><input class="form-control" type="text" name="ws_acct_id" ></tr>
+    <tr><label>No of Transactions</label><input class="form-control" type="number" name="limit"  ></tr>
+    <tr><label>From Date</label><input class="form-control" type="date" name="from_date" ></tr>
+    <tr><label>To Date</label><input class="form-control" type="date" name="to_date" ></tr>
+    <br>
+    <center><td colspan="2" align="center"><input  type="submit" value="Get Statement" ></center>
+</div>
 </form>
-<div>
+{% else %}
+<div class="jumbotron">
     <table   id="example" class="table table-hover">
         <thead>
         <tr>
-            <th scope="col">ws_tnsc_id</th>
-            <th scope="col">ws_desc</th>
-            <th scope="col">ws_amt</th>
-            <th scope="col">ws_trxn_date</th>
+            <th scope="col">Transaction ID</th>
+            <th scope="col">Description</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Date</th>
          
         </tr>
         </thead>
@@ -29,7 +34,7 @@
             <td scope='row'>{{ data["ws_tnsc_id"] }}</td>
             <td>{{ data["ws_desc"] }}</td>
             <td>{{ data["ws_amt"] }}</td>
-            <td>{{ data["ws_trxn_date"] }}</td>
+            <td>{{ data["ws_trxn_date"].strftime("%m/%d/%Y, %H:%M:%S") }}</td>
            
         </tr>
         {% endfor %}
@@ -38,6 +43,7 @@
     </table>
     <p class="lead"><button id="json" class="btn btn-primary">TO JSON</button> <button id="csv" class="btn btn-info">TO CSV</button>  <button id="pdf" class="btn btn-danger">TO PDF</button></p>
 </div>
+{%  endif %}
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
@@ -68,4 +74,5 @@
   })
   </script>
 
-{% include "footer.html" %}
+
+{% endblock %}

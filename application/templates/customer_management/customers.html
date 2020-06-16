@@ -1,4 +1,6 @@
-{% include "header.html" %}
+{% extends "layout.html" %}
+
+{% block content %}
 <div class="container p-3" align="center">
 
             <!-- Construct the rest of courses here -->
@@ -43,4 +45,4 @@
             {% endfor %}
     </div>
 
-{% include "footer.html" %}
+{% endblock %}

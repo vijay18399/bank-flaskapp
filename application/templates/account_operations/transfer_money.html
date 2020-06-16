@@ -1,9 +1,11 @@
-{% include "header.html" %}
+{% extends "layout.html" %}
+
+{% block content %}
 <div class="container p-3" align="center">
     {% if count == 2  %}
     <form action="" method="POST">
         <table>
-       <tr> <td><label> Customer ID</label></td><td> <input value="{{ ws_cust_id }}" type="text" name="cid"></td>
+       <tr> <td><label> Customer ID</label></td><td> <input readonly value="{{ ws_cust_id }}" type="text" name="cid"></td>
        </tr> 
        <tr> <td>
         <label> Source Account Type</label></td>
@@ -27,10 +29,10 @@
      <tr><td colspan="2"><input type="submit"></td></tr>   
     </table>
         {% else %}
-        Current User {{ ws_cust_id }} Donot have both Saving and Current 
+        Current User with ID - {{ ws_cust_id }} Donot have both Saving and Current 
         {% endif %}
     </form>
     </div>
 
 
-{% include "footer.html" %}
+{% endblock %}

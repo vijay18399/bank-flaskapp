@@ -1,2 +1,18 @@
-{% include "header.html" %}
-{% include "footer.html" %}
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h1>Welcome to Retail bank</h1>
+
+            {% if session['user_id'] %}
+                <h3>Let's get started.</h3>
+            {% endif %}
+
+            <div style="text-align:left;">
+                Reatail Bank info
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

@@ -1,15 +1,17 @@
-{% include "header.html" %}
+{% extends "layout.html" %}
+
+{% block content %}
 <div class="container p-3" align="center">
 
     {% for data in accounts %}
     <div>
-        <table>
+        <table border="2">
         <tr><td>Customer ID </td><td>{{ data["ws_cust_id"] }}</td> </tr>
         <tr><td>Account ID</td> <td>{{ data["ws_acct_id"] }}</td> </tr>
         <tr><td>Account Type</td> <td>{{ data["ws_acct_type"] }}</td> </tr>
         <tr><td>Account Balance</td> <td>{{ data["ws_acct_balance"] }}</td> </tr>
-        <tr><td>Account Creation Date</td> <td>{{ data["ws_acct_crdate"] }}</td> </tr>
-        <tr><td>Account Last Transaction Date</td> <td> {{ data["ws_acct_lasttrdate"] }}</td></tr>
+        <tr><td>Account Creation Date</td> <td>{{ data["ws_acct_crdate"].strftime("%m/%d/%Y, %H:%M:%S") }}</td> </tr>
+        <tr><td>Account Last Transaction Date</td> <td> {{ data["ws_acct_lasttrdate"].strftime("%m/%d/%Y, %H:%M:%S") }}</td></tr>
         <tr><td>Account Duration</td> <td>{{  data["ws_acct_duration"] }}</td></tr>
         <tr><td>Delete</td> <td><a href="/deleteaccount/{{data['ws_acct_id']}}"> Delete</a></td> </tr>
         <tr><td>withdraw</td> <td><a href="/deposit/{{data['ws_acct_id']}}"> Withdraw</a></td></tr>
@@ -20,4 +22,4 @@
          
     </div>
 
-{% include "footer.html" %}
+    {% endblock %}

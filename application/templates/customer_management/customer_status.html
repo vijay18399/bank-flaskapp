@@ -1,4 +1,6 @@
-{% include "header.html" %}
+{% extends "layout.html" %}
+
+{% block content %}
 <div class="container p-3" align="center">
 <h6>Customer Status</h6>
 <table border="2">
@@ -20,13 +22,13 @@
               <td>{{ data["ws_message"] }}</td>
           
         
-              <td>{{ data["ws_cust_update"].strftime('%Y-%m-%d ') }}</td>
+              <td>{{ data["ws_cust_update"].strftime("%m/%d/%Y, %H:%M:%S") }}</td>
               <td> <a href="/customers/{{data['ws_cust_id']}}">view </a></td>
-              <td>  <a href="/update_customer/{{data['ws_cust_id']}}">Update </a></td>
+              <td>  <a href="/update-customer/{{data['ws_cust_id']}}">Update </a></td>
           </tr>
           {% endfor %}
           
 </table>
 
 
-{% include "footer.html" %}
+{% endblock %}

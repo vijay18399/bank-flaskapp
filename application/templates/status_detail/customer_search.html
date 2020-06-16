@@ -1,13 +1,19 @@
-{% include "header.html" %}
-<div class="container p-3" align="center">
-<h6>Customer Search</h6>
-<form action="#" method="POST">
-<table>
-    <tr><td><h6>Enter Customer SSIN Id:</h6></td><td><input type="text" name="ssn" ></td></tr>
-    <tr><td colspan="2" align="center">OR</td></tr>
-    <tr><td><h6>Enter Customer Id:</h6></td><td><input type="text" name="cid" ></td></tr>
-    <tr><td colspan="2" align="center"><input type="submit" value="view" ></td></tr>
-</table>
-</form>
 
-{% include "footer.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="jumbotron">
+    <center><h3>Search Customer</h3> </center>
+    {% include "includes/errors.html" %}
+<form action="" method="POST">
+
+    <div class="form-group"><label> Customer SSIN Id::</label><input class="form-control" type="text" name="ssn" ></div>
+OR
+    <div class="form-group"><label>Enter Customer Id:</label><input class="form-control" type="text" name="cid" ></div>
+        <div class="form-group"><input class="form-control" type="submit" value="view" ></div>
+
+</form>
+</div>
+</div>
+
+{% endblock %}

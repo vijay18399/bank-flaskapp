@@ -1,6 +1,9 @@
-{% include "header.html" %}
+{% extends "layout.html" %}
+
+{% block content %}
 <div class="container p-3" align="center">
 <h6>Account Status</h6>
+{% include "includes/errors.html" %}
 <table border="2">
     <tr><th>Customer Id</th>
         <th>Account Id</th>
@@ -21,8 +24,8 @@
         <td>{{ data["ws_acct_balance"] }}</td>
         <td>{{ data["r1"][0].ws_status }}</td>
         <td>{{ data["r1"][0].ws_message }}</td>
-        <td>{{ data["ws_acct_crdate"].strftime('%Y-%m-%d ') }}</td>
-        <td>{{ data["ws_acct_lasttrdate"].strftime('%Y-%m-%d') }}</td>
+        <td>{{ data["ws_acct_crdate"].strftime("%m/%d/%Y, %H:%M:%S")}}</td>
+        <td>{{ data["ws_acct_lasttrdate"].strftime("%m/%d/%Y, %H:%M:%S") }}</td>
         <td> <a href="/accounts/{{data['ws_acct_id']}}">view </a></td>
         <td> <a href="/deposit/{{data['ws_acct_id']}}">Deposit </a></td>
         <td> <a href="/withdraw/{{data['ws_acct_id']}}">Withdraw </a></td>
@@ -33,4 +36,4 @@
 </table>
 
 
-{% include "footer.html" %}
+{% endblock %}

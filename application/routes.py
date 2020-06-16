@@ -197,14 +197,14 @@ def account_status():
                 'foreignField': 'ws_cust_id', 
                 'as': 'r1'
                 }
-                }
+        }
                 ]
     accounts =  list( Account.objects.aggregate(pipeline))
     return render_template("status_detail/account_status.html",accounts=accounts)
 
 @app.route('/deposit', methods=["GET","POST"])
 @app.route('/deposit/<aid>', methods=["GET","POST"])
-def deposit_money(aid=False):
+def deposit(aid=False):
     if not session.get('user_id'):
         return redirect(url_for('login'))
     if request.method == 'POST':
@@ -219,12 +219,12 @@ def deposit_money(aid=False):
         return redirect(url)
     if aid:
         account = Account.objects(ws_acct_id=aid).first()
-        return render_template("account_operations/deposit_money.html",account=account,info=True)
-    return render_template("account_operations/deposit_money.html",info=False)
+        return render_template("account_operations/deposit.html",account=account,info=True)
+    return render_template("account_operations/deposit.html",info=False)
 
 
 @app.route('/transfer/<cid>', methods=["GET","POST"])
-def transfer_money(cid):
+def transfer(cid):
     if not session.get('user_id'):
         return redirect(url_for('login'))
     if request.method == 'POST':
@@ -257,7 +257,7 @@ def transfer_money(cid):
     return render_template("account_operations/transfer_money.html",account=account,ws_cust_id=cid,count=count)
 @app.route('/withdraw', methods=["GET","POST"])
 @app.route('/withdraw/<aid>', methods=["GET","POST"])
-def withdraw_money(aid=False):
+def withdraw(aid=False):
     if not session.get('user_id'):
         return redirect(url_for('login'))
     if request.method == 'POST':
@@ -284,13 +284,17 @@ def account_statement():
     if request.method == 'POST':
         ws_acct_id=request.form['ws_acct_id']
         transactions = Transactions.objects(ws_acct_id=ws_acct_id)
+        n = request.form['limit']
+        if n:
+            n = int(request.form['limit'])
+            transactions = Transactions.objects(ws_acct_id=ws_acct_id).limit(n)
         if request.form['from_date'] and request.form['to_date']:
             start = request.form['from_date']
-            end=request.form['to_date']
-            limit= request.form['limit']
-            if limit:
-                transactions = Transactions.objects((Q(ws_acct_id=ws_acct_id) & Q(ws_trxn_date__gte=start)) & Q(ws_trxn_date__lte=end)).batch_size(limit)
-            transactions = Transactions.objects((Q(ws_acct_id=ws_acct_id) & Q(ws_trxn_date__gte=start)) & Q(ws_trxn_date__lte=end))
+            end=request.form['to_date'] 
+            if n:
+                n = int(request.form['limit'])
+                transactions = Transactions.objects((  Q(ws_trxn_date__lte=end) & Q(ws_trxn_date__gte=start)   ) &  Q(ws_acct_id=ws_acct_id)   ).limit(n)
+            transactions = Transactions.objects((  Q(ws_trxn_date__lte=end) & Q(ws_trxn_date__gte=start)   ) &  Q(ws_acct_id=ws_acct_id) )
         return render_template("account_operations/account_statement.html", transactions=transactions )
     return render_template("account_operations/account_statement.html")
 @app.route("/accounts/<aid>")

@@ -1,23 +1,30 @@
-{% include "header.html" %}
-<div class="container" align="center">
-<h6>Update Customer</h6>
-<form action="" method="POST">
-<table>
-    <tr><td><h6>Customer SSIN Id:</h6></td><td><input readonly value="{{ customer['ws_ssn'] }}" type="number" required></td></tr>
-    <tr><td><h6>Customer Id:</h6></td><td><input readonly  value="{{ customer['ws_cust_id'] }}" type="text" required></td></tr>
-    <tr><td><h6>Old Customer Name:</h6></td><td>{{ customer['ws_name']  }}</tr>
-    <tr><td><h6>New Customer Name:</h6></td><td><input name="ws_name" type="text" required></td></tr>
-    <tr><td><h6>Old Address:</h6></td><td>{{ customer['ws_adrs']  }}</td></tr>
-    <tr><td><h6>New Address:</h6></td><td><input type="text"  name="ws_adrs" required></td></tr>
-    <tr><td><h6>Customer Status</h6></td><td><select  name="ws_status">
-        <option    {% if 'ACTIVE' ==  customer["ws_status"] %} selected{% endif %} value="ACTIVE">ACTIVE</option>
-        <option {% if 'IN_ACTIVE' ==  customer["ws_status"] %} selected{% endif %} value="IN_ACTIVE">IN ACTIVE</option>
-      </select></td></tr>
-    <tr><td><h6>Old Age:</h6></td><td>{{ customer['ws_age']  }}</tr>
-    <tr><td><h6>New Age:</h6></td><td><input  name="ws_age" type="number"  required></td></tr>
-    <tr><td><h6>Message</h6></td><td><input  name="ws_message" type="text"  required></td></tr>
-    <tr><td colspan="2" align="center"><input type="submit" value="Update" ></td></tr>
-</table>
-</form>
 
-{% include "footer.html" %}
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <div class="row">
+    <div class="jumbotron">
+    <center><h3>Update Customer</h3> </center>
+    {% include "includes/errors.html" %}
+    <form action="" method="POST" >
+      <div class="form-group"><label>Customer SSIN Id:</label><input class="form-control" readonly value="{{ customer['ws_ssn'] }}" type="number" required></div>
+      <div class="form-group"><label>Customer Id:</label><input class="form-control" readonly  value="{{ customer['ws_cust_id'] }}" type="text" required></div>
+      <div class="form-group"><label>Old Customer Name:</label>{{ customer['ws_name']  }}</div>
+      <div class="form-group"><label>New Customer Name:</label><input class="form-control" name="ws_name" type="text" required></div>
+      <div class="form-group"><label>Old Address:</label>{{ customer['ws_adrs']  }}</div>
+      <div class="form-group"><label>New Address:</label><input class="form-control" type="text"  name="ws_adrs" required></div>
+      <div class="form-group"><label>Customer Status</label><select  name="ws_status">
+          <option    {% if 'ACTIVE' ==  customer["ws_status"] %} selected{% endif %} value="ACTIVE">ACTIVE</option>
+          <option {% if 'IN_ACTIVE' ==  customer["ws_status"] %} selected{% endif %} value="IN_ACTIVE">IN ACTIVE</option>
+        </select></div>
+      <div class="form-group"><label>Old Age:</label>{{ customer['ws_age']  }}</div>
+      <div class="form-group"><label>New Age:</label><input class="form-control"  name="ws_age" type="number"  required></div>
+      <div class="form-group"><label>Message</label><input class="form-control"  name="ws_message" type="text"  required></div>
+     <input  type="submit" value="Update" >
+
+      </form>
+    </div>
+    </div>
+
+{% endblock %}

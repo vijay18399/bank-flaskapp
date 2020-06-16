@@ -1,87 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Retail Bank Management</title>
-<link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<style type="text/css">
-	a:hover {background-color:#9999ff;border-radius:5px;}
-</style>
+  <title>Retail Bank</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
-<body class="font-weight-bold container-fluid">
-<div class="row">
-	<div class=" col-xs-12 col-lg-2 col-sm-3">
-		<center><img src="{{ url_for('static', filename = 'images/logo.png') }}" class="img-responsive" style="margin-top:5px;" width='150px'></center>
-	</div>
-	<div class=" col-xs-12 col-lg-9 col-sm-8">
-		<h1 style="font-size:4vw;text-align:center;margin-top:5px;padding-bottom:10;color:DodgerBlue;font-family:Georgia"  class="font-weight-bold">Retail Bank Management</h1>
-		<h3 style="font-size:1.5vw;text-align:center;margin-top:-20; padding-top:0;color:#3c3c3c;font-variant: small-caps;">(For Employees as well as Bank Customers )</h3>
-		
-	</div>
-</div>
-<div>
-    <nav class="navbar navbar-expand-lg  navbar-dark bg-primary  w-100 py-0 rounded">
-  <button class="navbar-toggler rounded" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse justify-content-center" id="collapsibleNavbar">
-            <div class="navbar-nav">
-                <a href="/" class="nav-item nav-link mr-5">Home</a>
-                {% if not session['user_id'] %}
-                <a href="/login" class="nav-item nav-link">Login</a>
-                <a href="/register" class="nav-item nav-link">Register</a>
-                {% else %}
-                <div class="nav-item dropdown mr-5">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Customer Management</a>
-                    <div class="dropdown-menu bg-primary">
-                        <a href="{{ url_for('create_customer') }}" class="dropdown-item">Create Customer</a>
-						<a href="{{ url_for('customer_status') }}" class="dropdown-item">Customer Status</a>
-                    </div>
-                </div>
-				<div class="nav-item dropdown mr-5">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Account Management</a>
-                    <div class="dropdown-menu bg-primary">
-                        <a href="{{ url_for('create_account') }}" class="dropdown-item">Create Account</a>
-                        <a href="{{ url_for('delete_account') }}" class="dropdown-item">Delete Account</a>  
-                    </div>
-                </div>
-				<div class="nav-item dropdown mr-5">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Status Detail</a>
-                    <div class="dropdown-menu bg-primary">
-                        <a href="{{ url_for('account_status') }}" class="dropdown-item">Account Status</a>
-                        <a href="{{ url_for('customer_search') }}" class="dropdown-item">Customer Search</a>
-                        <a href="{{ url_for('account_search') }}" class="dropdown-item">Account Search</a>
-                    </div>
-                </div>
-				<div class="nav-item dropdown mr-5">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Account Operations</a>
-                    <div class="dropdown-menu bg-primary">
-                        <a href="{{ url_for('deposit_money') }}" class="dropdown-item">Deposit Money</a>
-                        <a href="{{ url_for('withdraw_money') }}" class="dropdown-item">Withdraw Money</a>
-                        <a href="{{ url_for('account_statement') }}" class="dropdown-item">Account Statement</a>
-                    </div>
-                </div>
-                <a href="/logout" class="nav-item nav-link">Logout</a>
-                {% endif %}
-			</div>
-        </div>
-    </nav>
-</div>
-</body>
-{% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{category}}">
-                    <p>{{ message }}</p>
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<body>
 
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Retail bank</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#">Home</a></li>
+      {% if not session['user_id'] %}
+    <li> <a href="/login" class="nav-item nav-link">Login</a></li> 
+    <li>   <a href="/register" class="nav-item nav-link">Register</a></li>
+      {% else %}
+      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Customer Management <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="{{ url_for('create_customer') }}">Create Customer</a></li>
+          <li><a href="{{ url_for('customer_status') }}">Customer Status</a></li>
+        </ul>
+      </li>
+      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Account Management<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="{{ url_for('create_account') }}">Create Account</a></li>
+          <li><a href="{{ url_for('delete_account') }}">Delete Account</a></li>
+        </ul>
+      </li>
+      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Status Detail <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="{{ url_for('account_status') }}">Account Status</a></li>
+          <li><a href="{{ url_for('customer_search') }}">Customer Search</a></li>
+          <li><a href="{{ url_for('account_search') }}">Account Search</a></li>
+        </ul>
+      </li>
+      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Account Operations <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="{{ url_for('deposit') }}">Deposit Money</a></li>
+          <li><a href="{{ url_for('withdraw') }}">Withdraw Money</a></li>
+          <li><a href="{{ url_for('account_statement') }}">Account Statement</a></li>
+        </ul>
+      </li>
+      <li><a href="/logout">Logout</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
+  
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{category}}">
+                <p>{{ message }}</p>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+</div>
+
+</body>
 </html>
