@@ -26,6 +26,7 @@ def login():
             UserStore.objects(user_id=user_id).update_one(timestamp=datetime.now())
             flash(f"{user.user_id}, you are successfully logged in!", "success")
             session['user_id'] = user.user_id
+            session['role'] = user.role
             return redirect("/index")
         else:
             flash("Sorry, something went wrong.","danger")
@@ -37,7 +38,12 @@ def register():
     if request.method == 'POST':
         user_id       = request.form['user_id']
         password    = request.form['password']
-        user = UserStore(user_id=user_id)
+        role    = request.form['role']
+        user = UserStore.objects(user_id=user_id).first()
+        if user:
+            flash("Account Alreday exists with current ID!","danger")
+            return redirect(url_for('register'))
+        user = UserStore(user_id=user_id,role=role)
         user.set_password(password)
         user.save()
         flash("You are successfully registered!","success")
@@ -295,7 +301,7 @@ def account_statement():
                 n = int(request.form['limit'])
                 transactions = Transactions.objects((  Q(ws_trxn_date__lte=end) & Q(ws_trxn_date__gte=start)   ) &  Q(ws_acct_id=ws_acct_id)   ).limit(n)
             transactions = Transactions.objects((  Q(ws_trxn_date__lte=end) & Q(ws_trxn_date__gte=start)   ) &  Q(ws_acct_id=ws_acct_id) )
-        return render_template("account_operations/account_statement.html", transactions=transactions )
+        return render_template("account_operations/account_statement.html", transactions=transactions ,ws_acct_id=ws_acct_id)
     return render_template("account_operations/account_statement.html")
 @app.route("/accounts/<aid>")
 def accounts(aid):

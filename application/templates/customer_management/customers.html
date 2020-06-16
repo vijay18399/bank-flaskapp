@@ -5,7 +5,7 @@
 
             <!-- Construct the rest of courses here -->
             {% for data in customers %}
-            <table border="2" >
+            <table class="table table-striped" border="2" >
                 <tr><th>SSn </th><td>   {{ data["ws_ssn"] }}    </td></tr>
                 <tr><th>Customer ID </th><td>   {{ data["ws_cust_id"] }}   </td></tr>
                 <tr><th>Name </th><td>   {{ data["ws_name"] }}   </td></tr>
@@ -26,7 +26,7 @@
                       </button>
                     </div>
                     <div class="modal-body">
-                        <table border="2" >
+                        <table class="table table-striped" border="2" >
                         <tr><th>SSN </th><td>   {{ data["ws_ssn"] }}    </td></tr>
                         <tr><th>Customer ID </th><td>   {{ data["ws_cust_id"] }}   </td></tr>
                         <tr><th>Name </th><td>   {{ data["ws_name"] }}   </td></tr>

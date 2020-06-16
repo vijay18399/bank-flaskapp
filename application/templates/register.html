@@ -1,14 +1,17 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="container p-3" align="center">
+<div class="row">
 <h6>Register</h6>
 <form action="" method="POST">
-<table>
-    <tr><td><h6>Employee Id:</h6></td><td><input type="text" name="user_id" required></td></tr>
-    <tr><td><h6>Password:</h6></td><td><input type="password" name="password"  required></td></tr>
-    <tr><td colspan="2" align="center"><input type="submit" value="submit" ></td></tr>
-</table>
+<div class="jumbotron"  >
+    <div class="form-group"><label>Employee Id</label><input type="text" name="user_id" required></div>
+    <div class="form-group"><label>Role</label>  <select class="form-control" id="role" name="role"><option value="CASHIER">CASHIER</option><option value="EMPLOYEE">EMPLOYEE</option></select></div>
+    <div class="form-group"><label>Password</label><input type="password" name="password"  required></div>
+  
+    <div class="form-group"><input type="submit" value="submit" ></td></tr>
+</div>
 </form>
+</div>
 
 {% endblock %}

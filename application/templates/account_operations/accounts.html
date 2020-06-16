@@ -5,7 +5,7 @@
 
     {% for data in accounts %}
     <div>
-        <table border="2">
+        <table class="table table-striped" border="2">
         <tr><td>Customer ID </td><td>{{ data["ws_cust_id"] }}</td> </tr>
         <tr><td>Account ID</td> <td>{{ data["ws_acct_id"] }}</td> </tr>
         <tr><td>Account Type</td> <td>{{ data["ws_acct_type"] }}</td> </tr>
