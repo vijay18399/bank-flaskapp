@@ -30,6 +30,19 @@ def login():
         else:
             flash("Sorry, something went wrong.","danger")
     return render_template("login.html")
+@app.route("/register", methods=['POST','GET'])
+def register():
+    if session.get('user_id'):
+        return redirect(url_for('index'))
+    if request.method == 'POST':
+        user_id       = request.form['user_id']
+        password    = request.form['password']
+        user = UserStore(user_id=user_id)
+        user.set_password(password)
+        user.save()
+        flash("You are successfully registered!","success")
+        return redirect(url_for('index'))
+    return render_template("register.html")
 
 @app.route("/logout")
 def logout():
@@ -176,7 +189,17 @@ def customer_search():
 
 @app.route('/account-status')
 def account_status():
-    accounts = Account.objects.order_by("-ws_acct_id")
+    pipeline = [
+        {
+            '$lookup': {
+                'from': 'customer', 
+                'localField': 'ws_cust_id', 
+                'foreignField': 'ws_cust_id', 
+                'as': 'r1'
+                }
+                }
+                ]
+    accounts =  list( Account.objects.aggregate(pipeline))
     return render_template("status_detail/account_status.html",accounts=accounts)
 
 @app.route('/deposit', methods=["GET","POST"])
@@ -278,4 +301,6 @@ def accounts(aid):
     else:
         return redirect(url_for(index))
     return render_template("account_operations/accounts.html", accounts=accounts )
+
+
 

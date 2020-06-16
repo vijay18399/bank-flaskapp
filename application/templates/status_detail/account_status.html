@@ -6,6 +6,9 @@
         <th>Account Id</th>
         <th>Account type</th>
         <th>Account Balance</th>
+        <th>Status</th>
+        <th>Message</th>
+        <th>Account Balance</th>
         <th>Account Creation Date</th>
         <th>Last Transaction Date</th>
         <th colspan="4">Operations</th>
@@ -16,6 +19,8 @@
         <td>{{ data["ws_acct_id"] }}</td>
         <td> {% if data["ws_acct_type"] ==  "S" %} Savings Account {% else %}  Current account {% endif %}</td>
         <td>{{ data["ws_acct_balance"] }}</td>
+        <td>{{ data["r1"][0].ws_status }}</td>
+        <td>{{ data["r1"][0].ws_message }}</td>
         <td>{{ data["ws_acct_crdate"].strftime('%Y-%m-%d ') }}</td>
         <td>{{ data["ws_acct_lasttrdate"].strftime('%Y-%m-%d') }}</td>
         <td> <a href="/accounts/{{data['ws_acct_id']}}">view </a></td>

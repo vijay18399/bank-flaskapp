@@ -32,6 +32,7 @@
                 <a href="/" class="nav-item nav-link mr-5">Home</a>
                 {% if not session['user_id'] %}
                 <a href="/login" class="nav-item nav-link">Login</a>
+                <a href="/register" class="nav-item nav-link">Register</a>
                 {% else %}
                 <div class="nav-item dropdown mr-5">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Customer Management</a>
