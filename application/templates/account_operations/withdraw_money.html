@@ -3,7 +3,7 @@
 {% block content %}
 <div class="row">
     <div class="jumbotron">
-    <center><h3>Deposite</h3> </center>
+    <center><h3>Withdraw</h3> </center>
   
     <form action="" method="POST">
         
@@ -12,7 +12,7 @@
          <div class="form-group"><label>Account Id:</label><input class="form-control" name="ws_acct_id" type="text" {% if info %} readonly   value={{account.ws_acct_id}}    {% endif %} required></div>
          <div class="form-group"><label>Account Type:</label> {% if account["ws_acct_type"] ==  "S" %} Savings Account {% else %}  Current account {% endif %}</div>
          <div class="form-group"><label>Balance:</label>{{  account.ws_acct_balance }} <input class="form-control" type="hidden"  name="ws_acct_balance"  {% if info %} readonly  value="{{  account.ws_acct_balance }}"   {% endif %}   required></div>
-         <div class="form-group"><label>Deposit  Amount:</label><input class="form-control" type="number"  name="amount" required></div>
+         <div class="form-group"><label>Withdraw  Amount:</label><input class="form-control" type="number"  name="amount" required></div>
          <div class="form-group"><input class="form-control" type="submit" value="submit" ></div>
     </table>
     </form>

@@ -137,7 +137,7 @@ def create_account():
         account = Account(ws_cust_id=ws_cust_id,ws_acct_id=ws_acct_id,ws_acct_type=ws_acct_type,ws_acct_balance=ws_acct_balance,ws_acct_crdate=ws_acct_crdate,ws_acct_lasttrdate=ws_acct_lasttrdate,ws_acct_duration=ws_acct_duration)
         account.save()
         flash("Account Created successfully !","success")
-        return redirect(url_for('index'))
+        return redirect('/accounts/'+ws_acct_id)
     return render_template("account_management/create_account.html")
 
 @app.route('/delete-account', methods=['POST','GET'])
@@ -206,6 +206,10 @@ def customer_search():
 
 @app.route('/account-status')
 def account_status():
+    count = Account.objects().count()
+    if count ==0:
+        flash("Currently No Accounts Created Untill Now","danger")
+        return redirect(url_for(index))
     accounts =  list( Account.objects.aggregate(*[{
         '$lookup': {
             'from': 'customer', 

@@ -8,7 +8,7 @@
         <table class="table table-striped" border="2">
         <tr><td>Customer ID </td><td>{{ data["ws_cust_id"] }}</td> </tr>
         <tr><td>Account ID</td> <td>{{ data["ws_acct_id"] }}</td> </tr>
-        <tr><td>Account Type</td> <td>{{ data["ws_acct_type"] }}</td> </tr>
+        <tr><td>Account Type</td> <td> {% if data["ws_acct_type"] ==  "S" %} Savings Account {% else %}  Current account {% endif %}</td> </tr>
         <tr><td>Account Balance</td> <td>{{ data["ws_acct_balance"] }}</td> </tr>
         <tr><td>Account Creation Date</td> <td>{{ data["ws_acct_crdate"].strftime("%m/%d/%Y, %H:%M:%S") }}</td> </tr>
         <tr><td>Account Last Transaction Date</td> <td> {{ data["ws_acct_lasttrdate"].strftime("%m/%d/%Y, %H:%M:%S") }}</td></tr>
@@ -16,6 +16,8 @@
         <tr><td>Delete</td> <td><a href="/deleteaccount/{{data['ws_acct_id']}}"> Delete</a></td> </tr>
         <tr><td>deposit</td> <td><a href="/deposit/{{data['ws_acct_id']}}"> deposit</a></td></tr>
         <tr><td>withdraw</td><td><a href="/withdraw/{{data['ws_acct_id']}}"> withdraw</a></td> </tr>
+        <tr><td>Transfer</td><td><a href="/transfer/{{data['ws_cust_id']}}"> Transfer</a></td> </tr>
+        
     </table>
     </div>
     {% endfor %}
