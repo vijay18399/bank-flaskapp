@@ -61,8 +61,8 @@ def create_customer():
         return redirect(url_for('login'))
     if request.method == 'POST':
         ws_ssn       = request.form['ws_ssn']
-        user = UserStore.objects(ws_ssn=ws_ssn).first()
-        if user:
+        customer = Customer.objects(ws_ssn=ws_ssn).first()
+        if customer:
             flash("SSN Alreday exists with another Customer","danger")
             return redirect(url_for('create_customer'))
         ws_cust_id    =  get_random_alphaNumeric_string(8)
