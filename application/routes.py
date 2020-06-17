@@ -195,19 +195,13 @@ def customer_search():
 
 @app.route('/account-status')
 def account_status():
-    pipeline = [
-        {
-            '$lookup': {
-                'from': 'customer', 
-                'localField': 'ws_cust_id', 
-                'foreignField': 'ws_cust_id', 
-                'as': 'r1'
-                }
-        }
-                ]
-    accounts =  list( Account.objects.aggregate(pipeline))
+    accounts =  list( Account.objects.aggregate(*[{
+        '$lookup': {
+            'from': 'customer', 
+            'localField': 'ws_cust_id', 
+            'foreignField': 'ws_cust_id', 
+            'as': 'r1'}}]))
     return render_template("status_detail/account_status.html",accounts=accounts)
-
 @app.route('/deposit', methods=["GET","POST"])
 @app.route('/deposit/<aid>', methods=["GET","POST"])
 def deposit(aid=False):
