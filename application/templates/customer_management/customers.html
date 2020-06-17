@@ -9,8 +9,13 @@
                 <tr><th>SSN </th><td>   {{ data["ws_ssn"] }}    </td></tr>
                 <tr><th>Customer ID </th><td>   {{ data["ws_cust_id"] }}   </td></tr>
                 <tr><th>Name </th><td>   {{ data["ws_name"] }}   </td></tr>
-                <tr><th>Address </th><td>  {{ data["ws_adrs"] }}   </td></tr>
                 <tr><th>Age </th><td>   {{ data["ws_age"] }}   </td></tr>
+                <tr><th>Address line 1 </th><td>  {{ data["ws_adrs1"] }}   </td></tr>
+                <tr><th>Address line 2 </th><td>  {{ data["ws_adrs2"] }}   </td></tr>
+              
+                <tr><th>City </th><td>   {{ data["ws_city"] }}   </td></tr>
+                <tr><th>State </th><td>   {{ data["ws_state"] }}   </td></tr>
+        
                 <tr><th>Update </th><td> <a href="/update-customer/{{data['ws_cust_id']}}">Update </a>   </td></tr>
                 <tr><th>Delete</th><td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                     Delete
@@ -30,8 +35,9 @@
                         <tr><th>SSN </th><td>   {{ data["ws_ssn"] }}    </td></tr>
                         <tr><th>Customer ID </th><td>   {{ data["ws_cust_id"] }}   </td></tr>
                         <tr><th>Name </th><td>   {{ data["ws_name"] }}   </td></tr>
-                        <tr><th>Address </th><td>  {{ data["ws_adrs"] }}   </td></tr>
                         <tr><th>Age </th><td>   {{ data["ws_age"] }}   </td></tr>
+                        <tr><th>Address </th><td>  {{ data["ws_adrs1"] }}   </td></tr>
+                     
                         </table>
                     </div>
                     <div class="modal-footer">

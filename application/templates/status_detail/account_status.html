@@ -6,30 +6,22 @@
 {% include "includes/errors.html" %}
 <table class="table table-striped" border="2">
     <tr><th>Customer Id</th>
-        <th>Account Id</th>
         <th>Account type</th>
-        <th>Account Balance</th>
         <th>Status</th>
         <th>Message</th>
-        <th>Account Creation Date</th>
         <th>Account Last Transaction  Date</th>
-        <th>Last Transaction Date</th>
-        <th colspan="4">Operations</th>
+        <th colspan="5">Operations</th>
     </tr>
     {% for data in accounts %}
     <tr>
         <td scope='row'>{{ data["ws_cust_id"] }}</td>
-        <td>{{ data["ws_acct_id"] }}</td>
         <td> {% if data["ws_acct_type"] ==  "S" %} Savings Account {% else %}  Current account {% endif %}</td>
-        <td>{{ data["ws_acct_balance"] }}</td>
-        <td>{{ data["r1"][0].ws_status }}</td>
-        <td>{{ data["r1"][0].ws_message }}</td>
-        <td>{{ data["ws_acct_crdate"].strftime("%m/%d/%Y, %H:%M:%S")}}</td>
+        <td>{{ data["ws_status"] }}</td>
+        <td>{{ data["ws_message"] }}</td>
         <td>{{ data["ws_acct_lasttrdate"].strftime("%m/%d/%Y, %H:%M:%S") }}</td>
-        <td> <a href="/accounts/{{data['ws_acct_id']}}">view </a></td>
-        <td> <a href="/deposit/{{data['ws_acct_id']}}">Deposit </a></td>
-        <td> <a href="/withdraw/{{data['ws_acct_id']}}">Withdraw </a></td>
-        <td> <a href="/transfer/{{data['ws_cust_id']}}">Transfer </a></td>
+        <td> <a href="/account-status">refresh </a></td>
+     
+
     </tr>
     {% endfor %}
     

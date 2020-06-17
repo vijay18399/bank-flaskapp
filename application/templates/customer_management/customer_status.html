@@ -3,8 +3,8 @@
 {% block content %}
 <div class="container p-3" align="center">
 <table class="table table-striped" border="2">
-    <tr><th>Customer Id</th>
-        <th>Customer SSIN Id</th>
+    <tr>
+        <th>Customer SSN</th>
         <th>Status</th>
         <th>Message</th>
         <th>Last Updated</th>
@@ -15,9 +15,8 @@
           <!-- Construct the rest of courses here -->
           {% for data in customers %}
           <tr>
-              <td scope='row'>{{ data["ws_cust_id"] }}</td>
               <td>{{ data["ws_ssn"] }}</td>
-              <td> {% if 'ACTIVE' ==  data["ws_status"] %} ACTIVE  {% else %}   IN ACTIVE {% endif %} </td>
+              <td> {{ data["ws_status"] }}   </td>
               <td>{{ data["ws_message"] }}</td>
               <td>{{ data["ws_cust_update"].strftime("%m/%d/%Y, %H:%M:%S") }}</td>
               <td> <a href="/customers/{{data['ws_cust_id']}}">👁️ </a></td>

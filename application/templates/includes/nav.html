@@ -10,7 +10,7 @@
       <li>   <a href="/register" class="nav-item nav-link">Register</a></li>
         {% else %}
 
-        {% if  session['role'] == 'EMPLOYEE' %}
+        {% if  session['role'] == 'EXECUTIVE' %}
         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Customer Management <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="{{ url_for('create_customer') }}">Create Customer</a></li>
@@ -22,6 +22,7 @@
           <ul class="dropdown-menu">
             <li><a href="{{ url_for('create_account') }}">Create Account</a></li>
             <li><a href="{{ url_for('delete_account') }}">Delete Account</a></li>
+            <li><a href="{{ url_for('account_search') }}">Account Search</a></li>
           </ul>
         </li>
         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Status Detail <span class="caret"></span></a>
@@ -31,17 +32,13 @@
         
           </ul>
         </li>
-        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Account Operations <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="{{ url_for('account_search') }}">Account Search</a></li>
-            <li><a href="{{ url_for('account_statement') }}">Account Statement</a></li>
-          </ul>
-        </li>
+       
         {% else %}
         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Account Details <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="{{ url_for('account_status') }}">Account Status</a></li>
             <li><a href="{{ url_for('account_search') }}">Account Search</a></li>
+            <li><a href="{{ url_for('transfer') }}">Transfer</a></li>
           </ul>
         </li>
    

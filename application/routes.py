@@ -61,19 +61,28 @@ def create_customer():
         return redirect(url_for('login'))
     if request.method == 'POST':
         ws_ssn       = request.form['ws_ssn']
+        if len(str(ws_ssn)) !=9:
+            flash("SSN length need to be 9 digits","danger")
+            return redirect(url_for('create_customer'))
         customer = Customer.objects(ws_ssn=ws_ssn).first()
         if customer:
             flash("SSN Alreday exists with another Customer","danger")
             return redirect(url_for('create_customer'))
-        ws_cust_id    =  '998998'+get_random_alphaNumeric_string(4)
+        ws_cust_id    =  '99899'+get_random_alphaNumeric_string(4)
         ws_name       =  request.form['ws_name'] 
-        ws_adrs       = request.form['ws_adrs'] 
+        ws_adrs1       = request.form['ws_adrs1'] 
+        if request.form['ws_adrs2']:
+            ws_adrs2       = request.form['ws_adrs2']
+        else:
+            ws_adrs2 ='NULL'
+        ws_city       = request.form['ws_city']
+        ws_state       = request.form['ws_state']
         ws_age       = request.form['ws_age'] 
-        ws_status = 'ACTIVE'
+        ws_status = 'CREATED'
         ws_cust_update =   datetime.now()
-        customer = Customer(ws_ssn=ws_ssn,ws_cust_id=ws_cust_id,ws_name=ws_name,ws_adrs=ws_adrs,ws_age=ws_age,ws_status=ws_status,ws_cust_update=ws_cust_update)
+        customer = Customer(ws_ssn=ws_ssn,ws_cust_id=ws_cust_id,ws_name=ws_name,ws_adrs1=ws_adrs1,ws_adrs2=ws_adrs2,ws_city=ws_city,ws_state=ws_state,ws_age=ws_age,ws_status=ws_status,ws_cust_update=ws_cust_update)
         customer.save()
-        flash("Customer Created successfully !","success")
+        flash("Customer creation initiated successfully !","success")
         return redirect('/customers/'+ws_cust_id)
     return render_template("customer_management/create_customer.html")
 @app.route("/customers/<cid>")
@@ -96,13 +105,19 @@ def update_customer(cid):
         return redirect(url_for('login'))
     if request.method == 'POST':
         ws_name       = request.form['ws_name']
-        ws_adrs       = request.form['ws_adrs']
+        ws_adrs1       = request.form['ws_adrs1'] 
+        if request.form['ws_adrs2']:
+            ws_adrs2       = request.form['ws_adrs2']
+        else:
+            ws_adrs2 ='NULL'
+        ws_city       = request.form['ws_city']
+        ws_state       = request.form['ws_state']
         ws_age       = request.form['ws_age']
-        ws_status       = request.form['ws_status']
+        ws_status       = 'UPDATED'
         ws_message       = request.form['ws_message']
         ws_cust_update =   datetime.now()
-        Customer.objects(ws_cust_id=cid).update_one(ws_name=ws_name,ws_adrs=ws_adrs,ws_cust_update=ws_cust_update,ws_age=ws_age,ws_status=ws_status,ws_message=ws_message) 
-        flash("Customer Updated successfully !","success")
+        Customer.objects(ws_cust_id=cid).update_one(ws_name=ws_name,ws_adrs1=ws_adrs1,ws_adrs2=ws_adrs2,ws_city=ws_city,ws_state=ws_state,ws_cust_update=ws_cust_update,ws_age=ws_age,ws_status=ws_status,ws_message=ws_message) 
+        flash("Customer update initiated successfully !","success")
         url = '/customers/'+cid
         return redirect(url)
     customer = Customer.objects(ws_cust_id=cid).first()
@@ -111,9 +126,9 @@ def update_customer(cid):
 @app.route("/delete_customer/<cid>")
 def delete_customer(cid):
     print(cid,flush=True)
-    Customer.objects(ws_cust_id=cid).delete()
-    flash("Customer  with ID "+cid+" Deleted successfully !","success")
-    return redirect(url_for('customer_status'))
+    Customer.objects(ws_cust_id=cid).update_one(ws_status='DELETED')
+    flash("Customer  with ID- "+cid+" deletion initiated successfully !","success")
+    return redirect(url_for('index'))
 
 @app.route('/customer-status')
 def customer_status():
@@ -128,15 +143,23 @@ def create_account():
         return redirect(url_for('login'))
     if request.method == 'POST':
         ws_cust_id       = request.form['ws_cust_id']
-        ws_acct_id       = get_random_alphaNumeric_string(8)
+        ws_acct_id       = get_random_alphaNumeric_string(9)
         ws_acct_type       = request.form['ws_acct_type']
-        ws_acct_balance       = request.form['ws_acct_balance']
+        ws_acct_balance       = int(request.form['ws_acct_balance'])
+        if ws_acct_balance <= 0:
+            flash("Account creation Failed due to negative amount!","danger")
+            return redirect(url_for('create_account'))
         ws_acct_crdate       =  datetime.now()
         ws_acct_lasttrdate       =  datetime.now()
         ws_acct_duration       = 0
-        account = Account(ws_cust_id=ws_cust_id,ws_acct_id=ws_acct_id,ws_acct_type=ws_acct_type,ws_acct_balance=ws_acct_balance,ws_acct_crdate=ws_acct_crdate,ws_acct_lasttrdate=ws_acct_lasttrdate,ws_acct_duration=ws_acct_duration)
+        ws_status = 'CREATED'
+        account= Account.objects(ws_cust_id=ws_cust_id,ws_acct_type=ws_acct_type)
+        if account:
+            flash("Current User already have this type of account please try other","danger")
+            return redirect(url_for('create_account'))
+        account = Account(ws_cust_id=ws_cust_id,ws_acct_id=ws_acct_id,ws_acct_type=ws_acct_type,ws_acct_balance=ws_acct_balance,ws_acct_crdate=ws_acct_crdate,ws_message='CREATED',ws_acct_lasttrdate=ws_acct_lasttrdate,ws_acct_duration=ws_acct_duration,ws_status=ws_status)
         account.save()
-        flash("Account Created successfully !","success")
+        flash("Account creation initiated successfully!","success")
         return redirect('/accounts/'+ws_acct_id)
     return render_template("account_management/create_account.html")
 
@@ -147,16 +170,16 @@ def delete_account():
     if request.method == 'POST':
         ws_acct_id       = request.form['ws_acct_id']
         ws_acct_type       = request.form['ws_acct_type']
-        account= Account.objects(ws_acct_id=ws_acct_id,ws_acct_type=ws_acct_type).delete()
+        account= Account.objects(ws_acct_id=ws_acct_id,ws_acct_type=ws_acct_type).update_one(ws_status='DELETED')
         if account ==0:
             flash("No Account  Available with Given Information !","danger")
         else:
-            flash("Account Deleted  successfully !","success")
+            flash("Account deletion initiated successfully","success")
         return redirect(url_for('delete_account'))
     return render_template("account_management/delete_account.html")
 @app.route("/deleteaccount/<aid>")
 def deleteaccount(aid):
-    Account.objects(ws_acct_id=aid).delete()
+    Account.objects(ws_acct_id=aid).update_one(ws_status='DELETED')
     flash("Account Deleted successfully !","success")
     return redirect(url_for('index'))
 
@@ -172,7 +195,7 @@ def account_search():
                 return redirect(url)
             else:
                 flash("No account exists with given Account Id !","danger")
-        else:
+        elif ws_cust_id:
             account = Account.objects(ws_cust_id=ws_cust_id).first()
             if account:
                 ws_acct_id=account.ws_acct_id
@@ -180,6 +203,8 @@ def account_search():
                 return redirect(url)
             else:
                 flash("No account exists with given Account Id !","danger")
+        else:
+            flash("Search possible only by filling either  Account Id or Customer ID !","danger")
     return render_template("status_detail/account_search.html")
 
 @app.route('/customer-search', methods=["GET","POST"])
@@ -194,7 +219,7 @@ def customer_search():
                 return redirect(url)
             else:
                 flash("No Customer exists with given Customer Id !","danger")
-        else:
+        elif ws_ssn :
             customer = Customer.objects(ws_ssn=ws_ssn).first()
             if customer:
                 ws_cust_id=customer.ws_cust_id
@@ -202,6 +227,8 @@ def customer_search():
                 return redirect(url)
             else:
                 flash("No Customer exists with given SSN !","danger")
+        else:
+            flash("Fill Either Customer ID OR SSN ID to search","danger")
     return render_template("status_detail/customer_search.html")
 
 @app.route('/account-status')
@@ -210,12 +237,7 @@ def account_status():
     if count ==0:
         flash("Currently No Accounts Created Untill Now","danger")
         return redirect(url_for(index))
-    accounts =  list( Account.objects.aggregate(*[{
-        '$lookup': {
-            'from': 'customer', 
-            'localField': 'ws_cust_id', 
-            'foreignField': 'ws_cust_id', 
-            'as': 'r1'}}]))
+    accounts = Account.objects()
     return render_template("status_detail/account_status.html",accounts=accounts)
 @app.route('/deposit', methods=["GET","POST"])
 @app.route('/deposit/<aid>', methods=["GET","POST"])
@@ -227,10 +249,11 @@ def deposit(aid=False):
         previous_amount=request.form['ws_acct_balance']
         ws_acct_id = request.form['ws_acct_id']
         ws_acct_balance=int(previous_amount)+int(amount)
-        Account.objects(ws_acct_id=ws_acct_id).update_one(ws_acct_balance=ws_acct_balance)
+        Account.objects(ws_acct_id=ws_acct_id).update_one(ws_acct_balance=ws_acct_balance,ws_message='DEPOSIT',ws_acct_lasttrdate=datetime.now())
         transactions= Transactions(ws_tnsc_id=get_random_alphaNumeric_string(8),ws_acct_id=ws_acct_id,ws_desc='Deposit',ws_amt=amount,ws_trxn_date=datetime.now())
         transactions.save()
         url='/accounts/'+ws_acct_id
+        flash("Amount deposited successfully","success")
         return redirect(url)
     if aid:
         account = Account.objects(ws_acct_id=aid).first()
@@ -238,38 +261,43 @@ def deposit(aid=False):
     return render_template("account_operations/deposit.html",info=False)
 
 
-@app.route('/transfer/<cid>', methods=["GET","POST"])
-def transfer(cid):
+@app.route('/transfer', methods=["GET","POST"])
+def transfer():
     if not session.get('user_id'):
         return redirect(url_for('login'))
     if request.method == 'POST':
         print(request.form,flush=True)
         sr_acct_id=request.form['sr_acct_id']
         tr_acct_id=request.form['tr_acct_id']
-        cid = request.form['cid']
         if sr_acct_id == tr_acct_id:
-            flash("Source and Target cannot be  same !","success")
-            return redirect('/transfer/'+cid)
+            flash("Source and Target cannot be  same !","danger")
+            return redirect('/transfer')
         amount = int(request.form['amount'])
         account1 = Account.objects(ws_acct_id=sr_acct_id).first()
         account2 = Account.objects(ws_acct_id=tr_acct_id).first()
-        if account1.ws_acct_balance >= amount:
-            sr_acct_balance = account1.ws_acct_balance - amount
-            tr_acct_balance = account2.ws_acct_balance + amount
-            Account.objects(ws_acct_id=sr_acct_id).update_one(ws_acct_balance=sr_acct_balance)
-            Account.objects(ws_acct_id=tr_acct_id).update_one(ws_acct_balance=tr_acct_balance)
-            transactions1 = Transactions(ws_tnsc_id=get_random_alphaNumeric_string(8),ws_acct_id=sr_acct_id,ws_desc='Transfer from here',ws_amt=amount,ws_trxn_date=datetime.now(),ws_src_typ=account1.ws_acct_type,ws_tgt_typ=account2.ws_acct_type)
-            transactions1.save()
-            transactions2 = Transactions(ws_tnsc_id=get_random_alphaNumeric_string(8),ws_acct_id=tr_acct_id,ws_desc='Transfer to here',ws_amt=amount,ws_trxn_date=datetime.now(),ws_src_typ=account1.ws_acct_type,ws_tgt_typ=account2.ws_acct_type)
-            transactions2.save()
-            flash("Tranfer Successful !","success")
-            return redirect('/transfer/'+cid)
+        if account1 and account2:
+            if account1.ws_acct_balance >= amount:
+                sr_acct_balance = account1.ws_acct_balance - amount
+                tr_acct_balance = account2.ws_acct_balance + amount
+                Account.objects(ws_acct_id=sr_acct_id).update_one(ws_acct_balance=sr_acct_balance,ws_message='TRANSFER',ws_acct_lasttrdate=datetime.now())
+                Account.objects(ws_acct_id=tr_acct_id).update_one(ws_acct_balance=tr_acct_balance,ws_message='TRANSFER',ws_acct_lasttrdate=datetime.now())
+                transactions1 = Transactions(ws_tnsc_id=get_random_alphaNumeric_string(8),ws_acct_id=sr_acct_id,ws_desc='Transfer from here',ws_amt=amount,ws_trxn_date=datetime.now(),ws_src_typ=account1.ws_acct_type,ws_tgt_typ=account2.ws_acct_type)
+                transactions1.save()
+                transactions2 = Transactions(ws_tnsc_id=get_random_alphaNumeric_string(8),ws_acct_id=tr_acct_id,ws_desc='Transfer to here',ws_amt=amount,ws_trxn_date=datetime.now(),ws_src_typ=account1.ws_acct_type,ws_tgt_typ=account2.ws_acct_type)
+                transactions2.save()
+                flash("Amount transfer completed successfully !","success")
+                return redirect('/transfer')
+            else:
+                flash("Transfer not allowed, please choose smaller amount !","danger")
+                return redirect('/transfer')
         else:
-            flash("Tranfer Failur due to insuffiecient funds !","fail")
-            return redirect('/transfer/'+cid)
-    account = Account.objects(ws_cust_id=cid)
-    count = Account.objects(ws_cust_id=cid).count()
-    return render_template("account_operations/transfer_money.html",account=account,ws_cust_id=cid,count=count)
+            if account1:
+                flash("Destination Account Doest exists !","danger")
+                return redirect('/transfer')
+            else:
+                flash("Source Account Doest exists !","danger")
+                return redirect('/transfer')
+    return render_template("account_operations/transfer_money.html")
 @app.route('/withdraw', methods=["GET","POST"])
 @app.route('/withdraw/<aid>', methods=["GET","POST"])
 def withdraw(aid=False):
@@ -281,12 +309,13 @@ def withdraw(aid=False):
         ws_acct_id = request.form['ws_acct_id']
         ws_acct_balance=int(previous_amount)-int(amount)
         if ws_acct_balance<=0:
-            flash("With draw  failure insuffiecient funds !","fail")
+            flash("Withdraw not allowed, please choose smaller amount","danger")
             url='/withdraw/'+ws_acct_id
             return redirect(url)
-        Account.objects(ws_acct_id=ws_acct_id).update_one(ws_acct_balance=ws_acct_balance,ws_acct_lasttrdate=datetime.now())
+        Account.objects(ws_acct_id=ws_acct_id).update_one(ws_acct_balance=ws_acct_balance,ws_message='WITHDRAW',ws_acct_lasttrdate=datetime.now())
         transactions= Transactions(ws_tnsc_id=get_random_alphaNumeric_string(8),ws_acct_id=ws_acct_id,ws_desc='Withdraw',ws_amt=amount,ws_trxn_date=datetime.now())
         transactions.save()
+        flash("Amount withdrawn successfully","success")
         url='/accounts/'+ws_acct_id
         return redirect(url)
     if aid:
