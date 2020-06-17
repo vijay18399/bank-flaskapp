@@ -47,7 +47,7 @@ def register():
         user.set_password(password)
         user.save()
         flash("You are successfully registered!","success")
-        return redirect(url_for('index'))
+        return redirect(url_for('login'))
     return render_template("register.html")
 
 @app.route("/logout")
@@ -65,7 +65,7 @@ def create_customer():
         if customer:
             flash("SSN Alreday exists with another Customer","danger")
             return redirect(url_for('create_customer'))
-        ws_cust_id    =  get_random_alphaNumeric_string(8)
+        ws_cust_id    =  '998998'+get_random_alphaNumeric_string(4)
         ws_name       =  request.form['ws_name'] 
         ws_adrs       = request.form['ws_adrs'] 
         ws_age       = request.form['ws_age'] 
@@ -74,7 +74,7 @@ def create_customer():
         customer = Customer(ws_ssn=ws_ssn,ws_cust_id=ws_cust_id,ws_name=ws_name,ws_adrs=ws_adrs,ws_age=ws_age,ws_status=ws_status,ws_cust_update=ws_cust_update)
         customer.save()
         flash("Customer Created successfully !","success")
-        return render_template("customer_management/create_customer.html")
+        return redirect('/customers/'+ws_cust_id)
     return render_template("customer_management/create_customer.html")
 @app.route("/customers/<cid>")
 def customers(cid):
@@ -82,7 +82,14 @@ def customers(cid):
         return redirect(url_for('login'))
     if cid :
         customers = Customer.objects(ws_cust_id=cid)
-    return render_template("customer_management/customers.html", customers=customers)
+        if  customers:
+            return render_template("customer_management/customers.html", customers=customers)
+        else:
+            flash("User with ID "+cid+" Doesn't exists","danger")
+            return redirect(url_for(index))
+    else:
+        flash("URL Doesn't exists","danger")
+        return redirect(url_for(index))
 @app.route('/update-customer/<cid>', methods=['POST','GET'])
 def update_customer(cid):
     if not session.get('user_id'):
@@ -105,8 +112,8 @@ def update_customer(cid):
 def delete_customer(cid):
     print(cid,flush=True)
     Customer.objects(ws_cust_id=cid).delete()
-    flash("Customer Deleted successfully !","success")
-    return redirect(url_for('customer-status'))
+    flash("Customer  with ID "+cid+" Deleted successfully !","success")
+    return redirect(url_for('customer_status'))
 
 @app.route('/customer-status')
 def customer_status():
@@ -194,7 +201,7 @@ def customer_search():
                 url= 'customers/'+ws_cust_id
                 return redirect(url)
             else:
-                flash("No Customer exists with given Customer Id !","danger")
+                flash("No Customer exists with given SSN !","danger")
     return render_template("status_detail/customer_search.html")
 
 @app.route('/account-status')
