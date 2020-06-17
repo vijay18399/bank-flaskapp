@@ -14,8 +14,8 @@
         <tr><td>Account Last Transaction Date</td> <td> {{ data["ws_acct_lasttrdate"].strftime("%m/%d/%Y, %H:%M:%S") }}</td></tr>
         <tr><td>Account Duration</td> <td>{{  data["ws_acct_duration"] }}</td></tr>
         <tr><td>Delete</td> <td><a href="/deleteaccount/{{data['ws_acct_id']}}"> Delete</a></td> </tr>
-        <tr><td>withdraw</td> <td><a href="/deposit/{{data['ws_acct_id']}}"> Withdraw</a></td></tr>
-        <tr><td>deposit</td><td><a href="/withdraw/{{data['ws_acct_id']}}"> Deposit</a></td> </tr>
+        <tr><td>deposit</td> <td><a href="/deposit/{{data['ws_acct_id']}}"> deposit</a></td></tr>
+        <tr><td>withdraw</td><td><a href="/withdraw/{{data['ws_acct_id']}}"> withdraw</a></td> </tr>
     </table>
     </div>
     {% endfor %}
