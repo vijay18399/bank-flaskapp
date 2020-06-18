@@ -9,22 +9,61 @@
         <th>Message</th>
         <th>Last Updated</th>
         <th>profile</th>
-        <th>Operations</th>
+        <th colspan="2">Operations</th>
      
     </tr>
           <!-- Construct the rest of courses here -->
           {% for data in customers %}
-          <tr>
-              <td>{{ data["ws_ssn"] }}</td>
+          <tr id="{{ data['ws_cust_id'] }}" >
+            <td style="display: none;" >{{ data["ws_cust_id"] }}</td> 
+            <td>{{ data["ws_ssn"] }}</td>
               <td> {{ data["ws_status"] }}   </td>
               <td>{{ data["ws_message"] }}</td>
               <td>{{ data["ws_cust_update"].strftime("%m/%d/%Y, %H:%M:%S") }}</td>
               <td> <a href="/customers/{{data['ws_cust_id']}}">👁️ </a></td>
               <td>  <a href="/update-customer/{{data['ws_cust_id']}}">Update </a></td>
+              <td>   <button    class="button" value = "{{ data['ws_cust_id'] }}" >Refresh </button> </td>
           </tr>
           {% endfor %}
           
 </table>
+<script>
+
+$(document).ready(function(){
+      $('.button').click(function(){
+        var $row = jQuery(this).closest('tr');
+    var $columns = $row.find('td');
+
+ 
+    
+    jQuery.each($columns, function(i, item) {
+        if(i==0){
+            val = item.innerHTML;
+            $.get(
+                  "/get_customer/"+val,
+                  function(data) {
+                
+        
+             date =  new Date(data[0]["ws_cust_update"].$date).toLocaleString()
+               a=data[0]['ws_cust_id']
+               p=data[0]['ws_ssn']
+               b=data[0]["ws_message"]
+               s=data[0]["ws_status"]
+               c= "<a href='/customers/"+data[0]['ws_cust_id']+"'>view 👁️ </a>";
+               d=data[0]["ws_cust_update"]
+               e= "<a href='/update-customer/"+data[0]['ws_cust_id']+"'>Update </a>";
+               button= " <button  class='button' value = '"+ data[0]['ws_cust_id'] +"'>Refresh </button>";
+               x="<td style='display : none'>"+a+"</td><td>"+p+"</td><td>"+s+"</td><td>"+b+"</td><td>"+date+"</td><td>"+c+"</td><td>"+e+"</td><td>"+button+"</td>"
+               $('#'+val).html(x); 
+                  }  
+               ); 
+            
+        }
+    });
+
+      });
+    });
+</script>
 
 
 {% endblock %}

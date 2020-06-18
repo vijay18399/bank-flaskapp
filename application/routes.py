@@ -78,6 +78,7 @@ def create_customer():
         ws_city       = request.form['ws_city']
         ws_state       = request.form['ws_state']
         ws_age       = request.form['ws_age'] 
+        ws_message       = 'JUST CREATED'
         ws_status = 'CREATED'
         ws_cust_update =   datetime.now()
         customer = Customer(ws_ssn=ws_ssn,ws_cust_id=ws_cust_id,ws_name=ws_name,ws_adrs1=ws_adrs1,ws_adrs2=ws_adrs2,ws_city=ws_city,ws_state=ws_state,ws_age=ws_age,ws_status=ws_status,ws_cust_update=ws_cust_update)
@@ -349,6 +350,14 @@ def accounts(aid):
     else:
         return redirect(url_for(index))
     return render_template("account_operations/accounts.html", accounts=accounts )
+@app.route("/get_account/<aid>")
+def getaccounts(aid):
+    accounts = Account.objects(ws_acct_id=aid).first()
+    return Response(json.dumps(accounts), mimetype="application/json")
+@app.route("/get_customer/<cid>")
+def getcustomer(cid):
+    customers = Customer.objects(ws_cust_id=cid)
+    return Response(json.dumps(customers), mimetype="application/json")
 
 
 
