@@ -2,51 +2,56 @@
 
 {% block content %}
 
-<div class="row">
-  <div class="container jumbotron">
-    <center>
-      <h3>Update Customer</h3>
-    </center>
-
-    <form action="" method="POST">
-      <div class="form-group"><label>Customer SSIN Id:</label><input class="form-control" readonly
-          value="{{ customer['ws_ssn'] }}" type="number" required></div>
-      <div class="form-group"><label>Customer Id:</label><input class="form-control" readonly
-          value="{{ customer['ws_cust_id'] }}" type="text" required></div>
-      <div class="form-group"><label> Customer Name:</label><input class="form-control"
-          value="{{ customer['ws_name'] }}" name="ws_name" type="text" required></div>
-      <div class="form-group">
-        <label for="customer id"> Address Line1</label>
-        <textarea class="form-control" placeholder="Enter Address Line1" name="ws_adrs1" type="text"
-          required>{{ customer['ws_adrs1'] }}</textarea>
+<div class="row justify-content-center">
+  <div class="col-md-8">
+      <div class="card">
+          <div class="card-header">Update Customer</div>
+          <div class="card-body">
+            <form action="" method="POST">
+              <div class="form-group"><label>Customer SSIN Id:</label><input class="form-control" readonly
+                  value="{{ customer['ws_ssn'] }}" type="number" required></div>
+              <div class="form-group"><label>Customer Id:</label><input class="form-control" readonly
+                  value="{{ customer['ws_cust_id'] }}" type="text" required></div>
+              <div class="form-group"><label> Customer Name:</label><input class="form-control"
+                  value="{{ customer['ws_name'] }}" name="ws_name" type="text" required></div>
+              <div class="form-group">
+                <label for="customer id"> Address Line1</label>
+                <textarea class="form-control" placeholder="Enter Address Line1" name="ws_adrs1" type="text"
+                  required>{{ customer['ws_adrs1'] }}</textarea>
+              </div>
+              <div class="form-group">
+                <label for="customer id">Address Line2</label>
+                <textarea class="form-control" placeholder="Enter Address Line2" name="ws_adrs2"
+                  type="text">{{ customer['ws_adrs2'] }}</textarea>
+              </div>
+              <div class="form-group">
+                <label for="customer id"> City</label>
+                <input class="form-control" placeholder="Enter City" name="ws_city" value="{{ customer['ws_city'] }}"
+                  type="text" required>
+              </div>
+              <div class="form-group">
+                <label for="customer id"> State</label>
+                <input class="form-control" placeholder="Enter State name" name="ws_state" value="{{ customer['ws_state'] }}"
+                  type="text" required>
+              </div>
+        
+        
+              <div class="form-group"><label> Age:</label><input
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  maxlength="3" class="form-control" value="{{ customer['ws_age'] }}" name="ws_age" type="number" required>
+              </div>
+              <div class="form-group"><label>Message</label><input class="form-control" value="{{ customer['ws_message'] }}"
+                  name="ws_message" type="text" required></div>
+              <input type="submit" value="Update">
+        
+            </form>
+      
+                        
+      
+           
       </div>
-      <div class="form-group">
-        <label for="customer id">Address Line2</label>
-        <textarea class="form-control" placeholder="Enter Address Line2" name="ws_adrs2"
-          type="text">{{ customer['ws_adrs2'] }}</textarea>
-      </div>
-      <div class="form-group">
-        <label for="customer id"> City</label>
-        <input class="form-control" placeholder="Enter City" name="ws_city" value="{{ customer['ws_city'] }}"
-          type="text" required>
-      </div>
-      <div class="form-group">
-        <label for="customer id"> State</label>
-        <input class="form-control" placeholder="Enter State name" name="ws_state" value="{{ customer['ws_state'] }}"
-          type="text" required>
-      </div>
-
-
-      <div class="form-group"><label> Age:</label><input
-          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-          maxlength="3" class="form-control" value="{{ customer['ws_age'] }}" name="ws_age" type="number" required>
-      </div>
-      <div class="form-group"><label>Message</label><input class="form-control" value="{{ customer['ws_message'] }}"
-          name="ws_message" type="text" required></div>
-      <input type="submit" value="Update">
-
-    </form>
   </div>
+</div>
 </div>
 
 {% endblock %}

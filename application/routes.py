@@ -12,7 +12,11 @@ def get_random_alphaNumeric_string(stringLength=8):
 @app.route("/index")
 @app.route("/home")
 def index():
-    return render_template("home.html", index=True )
+    c_count = UserStore.objects(role='CASHIER').count()
+    e_count = UserStore.objects(role='EXECUTIVE').count()
+    customer_count = Customer.objects().count()
+    account_count = Account.objects().count()
+    return render_template("home.html",c_count=c_count,e_count=e_count,customer_count=customer_count,account_count=account_count )
 @app.route("/login", methods=['POST','GET'])
 def login():
     if session.get('user_id'):
@@ -125,7 +129,8 @@ def update_customer(cid):
 
 @app.route("/delete_customer/<cid>")
 def delete_customer(cid):
-    print(cid,flush=True)
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
     Customer.objects(ws_cust_id=cid).update_one(ws_status='DELETED')
     flash("Customer  with ID- "+cid+" deletion initiated successfully !","success")
     return redirect(url_for('index'))
