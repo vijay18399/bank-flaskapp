@@ -1,25 +1,29 @@
-
 {% extends "layout.html" %}
 
 {% block content %}
 
-    <div class="row">
-    <div class="jumbotron">
-    <center><h3>Delete Customer</h3> </center>
-    <form action="" method="POST" >
-        <div class="form-group">
-          <label for="customer id">Account Id</label>
-          <input  class="form-control" id="ws_acct_id" placeholder="Enter Account" name="ws_acct_id" type="text" required>
-        </div>
-        <div class="form-group">
-            <label for="customer id">Account Type</label>
-            <select class="form-control" id="ws_acct_type" name="ws_acct_type"><option value="S">Savings</option><option value="C">Current</option></select>
-          </div>
-      
-    
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
-    </div>
-    </div>
+<div class="row">
+  <div class="jumbotron">
+    <center>
+      <h3>Delete Customer</h3>
+    </center>
+    <form action="" method="POST">
+      <div class="form-group">
+        <label for="account id">Account Id</label>
+        <input class="form-control" id="ws_acct_id" placeholder="Enter Account" name="ws_acct_id" type="text" required>
+      </div>
+      <div class="form-group">
+        <label for="account type id">Account Type</label>
+        <select class="form-control" id="ws_acct_type" name="ws_acct_type">
+          <option value="S">Savings</option>
+          <option value="C">Current</option>
+        </select>
+      </div>
+
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
 
 {% endblock %}

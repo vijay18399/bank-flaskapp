@@ -2,28 +2,34 @@
 
 {% block content %}
 
-    <div class="row">
-    <div class="jumbotron">
-    <center><h3>Create Customer</h3> </center>
-   
-    <form action="" method="POST" >
-        <div class="form-group">
-          <label for="customer id">Customer Id</label>
-          <input  class="form-control" id="ws_cust_id" placeholder="Enter Customer" name="ws_cust_id" type="text" required>
-        </div>
-        <div class="form-group">
-            <label for="customer id">Account Type</label>
-            <select class="form-control" id="ws_acct_type" name="ws_acct_type"><option value="S">Savings</option><option value="C">Current</option></select>
-          </div>
-        <div class="form-group">
-            <label for="deposit">Deposit Amount</label>
-            <input  class="form-control" id="amount" placeholder="Enter Amount" name="ws_acct_balance" type="number" required>
-          </div>
-     
+<div class="row">
+  <div class="jumbotron">
+    <center>
+      <h3>Create Customer</h3>
+    </center>
 
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
-    </div>
-    </div>
+    <form action="" method="POST">
+      <div class="form-group">
+        <label for="customerid">Customer Id</label>
+        <input class="form-control" id="ws_cust_id" placeholder="Enter Customer" name="ws_cust_id" type="text" required>
+      </div>
+      <div class="form-group">
+        <label for="account_type">Account Type</label>
+        <select class="form-control" id="ws_acct_type" name="ws_acct_type">
+          <option value="S">Savings</option>
+          <option value="C">Current</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="deposit amount">Deposit Amount</label>
+        <input class="form-control" id="amount" placeholder="Enter Amount" name="ws_acct_balance" type="number"
+          required>
+      </div>
+
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
 
 {% endblock %}

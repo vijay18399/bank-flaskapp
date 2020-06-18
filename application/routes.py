@@ -2,7 +2,6 @@ from application import app, db
 from datetime import datetime
 from flask import render_template, request, json, Response, redirect, flash, url_for, session
 from application.models import UserStore, Customer, Account,Transactions
-from application.forms import LoginForm, RegisterForm ,CustomerForm, AccountForm
 import random
 import string
 from mongoengine.queryset.visitor import Q
@@ -160,6 +159,8 @@ def create_account():
             return redirect(url_for('create_account'))
         account = Account(ws_cust_id=ws_cust_id,ws_acct_id=ws_acct_id,ws_acct_type=ws_acct_type,ws_acct_balance=ws_acct_balance,ws_acct_crdate=ws_acct_crdate,ws_message='CREATED',ws_acct_lasttrdate=ws_acct_lasttrdate,ws_acct_duration=ws_acct_duration,ws_status=ws_status)
         account.save()
+        transactions= Transactions(ws_tnsc_id=get_random_alphaNumeric_string(8),ws_acct_id=ws_acct_id,ws_desc='Deposit',ws_amt=ws_acct_balance,ws_trxn_date=datetime.now())
+        transactions.save()
         flash("Account creation initiated successfully!","success")
         return redirect('/accounts/'+ws_acct_id)
     return render_template("account_management/create_account.html")

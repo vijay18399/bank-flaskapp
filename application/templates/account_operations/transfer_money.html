@@ -2,27 +2,36 @@
 
 {% block content %}
 <div class="container p-3" align="center">
-  
+
     <form action="" method="POST">
         <table class="table table-striped">
-      
-       <tr> <td>
-        <label> Source Account ID</label></td>
-     <td> <input type="text" name="sr_acct_id">
-    </td></tr>
-    <tr> <td>  <label> Target Account ID</label></td> 
-        <td>
-            <input type="text" name="tr_acct_id">
-       
-    </td></tr>
-    <tr> <td> 
-        <label> Amount</label> </td><td><input type="number" name="amount"> </td></tr>
-    
-     <tr><td colspan="2"><input type="submit"></td></tr>   
-    </table>
-     
+
+            <tr>
+                <td>
+                    <label> Source Account ID</label></td>
+                <td> <input type="text" name="sr_acct_id">
+                </td>
+            </tr>
+            <tr>
+                <td> <label> Target Account ID</label></td>
+                <td>
+                    <input type="text" name="tr_acct_id">
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label> Amount</label> </td>
+                <td><input type="number" name="amount"> </td>
+            </tr>
+
+            <tr>
+                <td colspan="2"><input type="submit"></td>
+            </tr>
+        </table>
+
     </form>
-    </div>
+</div>
 
 
 {% endblock %}
