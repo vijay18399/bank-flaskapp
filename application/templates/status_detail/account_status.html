@@ -2,58 +2,59 @@
 
 {% block content %}
 <div class="container p-3" align="center">
-<h6>Account Status</h6>
-{% include "includes/errors.html" %}
-<table class="table table-striped" border="2">
-    <tr><th>Customer Id</th>
-        <th>Account type</th>
-        <th>Status</th>
-        <th>Message</th>
-        <th>Account Last Transaction  Date</th>
-        <th colspan="5">Operations</th>
-    </tr>
-    {% for data in accounts %}
-    <tr id="{{ data['ws_acct_id'] }}" >
-        <td style="display: none;">{{ data["ws_acct_id"] }}</td>
-        <td scope='row'>{{ data["ws_cust_id"] }}</td>
-        <td> {% if data["ws_acct_type"] ==  "S" %} Savings Account {% else %}  Current account {% endif %}</td>
-        <td>{{ data["ws_status"] }}</td>
-        <td>{{ data["ws_message"] }}</td>
-        <td>{{ data["ws_acct_lasttrdate"].strftime("%m/%d/%Y, %H:%M:%S") }}</td>
-        <td>   <button    class="button" value = "{{ data['ws_acct_id'] }}" >Refresh </button> </td>
-     
+    <h6>Account Status</h6>
+    {% include "includes/errors.html" %}
+    <table class="table table-striped" border="2">
+        <tr>
+            <th>Customer Id</th>
+            <th>Account type</th>
+            <th>Status</th>
+            <th>Message</th>
+            <th>Account Last Transaction Date</th>
+            <th colspan="5">Operations</th>
+        </tr>
+        {% for data in accounts %}
+        <tr id="{{ data['ws_acct_id'] }}">
+            <td style="display: none;">{{ data["ws_acct_id"] }}</td>
+            <td scope='row'>{{ data["ws_cust_id"] }}</td>
+            <td> {% if data["ws_acct_type"] ==  "S" %} Savings Account {% else %} Current account {% endif %}</td>
+            <td>{{ data["ws_status"] }}</td>
+            <td>{{ data["ws_message"] }}</td>
+            <td>{{ data["ws_acct_lasttrdate"].strftime("%m/%d/%Y, %H:%M:%S") }}</td>
+            <td> <button class="button" value="{{ data['ws_acct_id'] }}">Refresh </button> </td>
 
-    </tr>
-    {% endfor %}
-    <div id="stage">  </div>
-    
-</table>
 
-<script>
-    $(document).ready(function(){
-      $('.button').click(function(){
-        var $row = jQuery(this).closest('tr');
-    var $columns = $row.find('td');
+        </tr>
+        {% endfor %}
+        <div id="stage"> </div>
 
- 
-    
-    jQuery.each($columns, function(i, item) {
-        if(i==0){
-            val = item.innerHTML;
-            $.get(
-                  "/get_account/"+val,
-                  function(data) {
-                   
-               date =  new Date(data["ws_acct_lasttrdate"].$date).toLocaleString()
-               type=   data["ws_acct_type"] =='S' ? 'Savings Account' : 'Current  Account'
-               x="<td scope='row'>"+data["ws_cust_id"]+"</td><td>"+type+"</td><td>"+ data["ws_status"] +"</td><td>"+ data["ws_message"] +"</td><td>"+date+"</td><td>   <button   value = '"+data['ws_acct_id'] +"' >Refresh </button> </td>"
-                    $('#'+val).html(x);
-                  }
-               ); 
-        }
-    });
+    </table>
 
-      });
-    });
+    <script>
+        $(document).ready(function () {
+            $('.button').click(function () {
+                var $row = jQuery(this).closest('tr');
+                var $columns = $row.find('td');
+
+
+
+                jQuery.each($columns, function (i, item) {
+                    if (i == 0) {
+                        val = item.innerHTML;
+                        $.get(
+                            "/get_account/" + val,
+                            function (data) {
+
+                                date = new Date(data["ws_acct_lasttrdate"].$date).toLocaleString()
+                                type = data["ws_acct_type"] == 'S' ? 'Savings Account' : 'Current  Account'
+                                x = "<td scope='row'>" + data["ws_cust_id"] + "</td><td>" + type + "</td><td>" + data["ws_status"] + "</td><td>" + data["ws_message"] + "</td><td>" + date + "</td><td>   <button   value = '" + data['ws_acct_id'] + "' >Refresh </button> </td>"
+                                $('#' + val).html(x);
+                            }
+                        );
+                    }
+                });
+
+            });
+        });
     </script>
-{% endblock %}
+    {% endblock %}
